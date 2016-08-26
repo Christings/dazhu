@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+<div></div>
+{% block head %}
+<script type="text/javascript"
+			src="/static/js/sjcl.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#ecp").click(function(e){
+            data = $("#id_body").val();
+            edata = sjcl.encrypt($("#id_pwd").val(), data);
+            $("#id_body").val(edata);
+        });
+
+        $("#dcp").click(function(e){
+            data = $("#id_body").val();
+            ddata = sjcl.decrypt($("#id_pwd").val(), data);
+            $("#id_body").val(ddata);
+        });
+    });
+</script>
+
+<style>
+    #contact-form input#id_timestamp {
+        width:100%;
+        margin-bottom:5px;
+    }
+
+    #contact-form textarea#id_body {
+        font-size:14pt;
+        width:100%;
+        margin-bottom:5px;color:black;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section id="content">
+    <div class="wrap-content">
+        <div class="row block">
+            <div id="main-content" class="col-2-3">
+               <div class="wrap-col">
+				   <section>
+						<form action="" id="contact-form" method="post">
+                            {% csrf_token %}
+                            {{ form.mid }}
+                            <fieldset>
+                                <div>
+                                    <input id="id_title" style='width:100%;margin-bottom:5px;' placeholder="标题"
+                                        name="title" type="text"
+                                           value="{{form.title.value|default_if_none:''}}" />
+                                    {{ form.title.errors }}
+                                </div>
+                                <div class="content">
+                                    {{form.body}}
+                                    {{ form.body.errors }}
+
+                                    {{form.timestamp}}
+                                    {{ form.timestamp.errors }}
+
+                                    <input id="id_pwd" style="width:40%;margin-bottom:5px;" placeholder="密码" name="pwd"
+                                           type="text" autocomplete="off" value="" />
+                                    <input id="ecp" style="width:20%;" type="button" value="加密"/>
+                                    <input id="dcp" style="width:20%;" type="button" value="解密"/>
+                                </div>
+                                <div>
+                                    <input style="width:30%;" type="submit" value='创建/保存' />
+                                </div>
+
+                            </fieldset>
+                        </form>
+					</section>
+				</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

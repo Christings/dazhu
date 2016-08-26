@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+<div></div>
+{% block head %}
+	<link rel="stylesheet" href="/static/css/validationEngine.jquery.css">
+
+
+
+	<link href="/static/umeditor/themes/default/css/umeditor.min.css"
+	  type="text/css" rel="stylesheet">
+	<script type="text/javascript">
+		$(function(){
+			var form = $("#contact-form");
+			form.validationEngine();
+			$("#sendMsg").click(function(e){
+				e.preventDefault();
+				if(!form.validationEngine('validate')){
+					return;
+				}
+				form.submit();
+			});
+			var ue = UM.getEditor('id_body', {
+				toolbar: ['forecolor', 'backcolor', 'bold', 'fontfamily'
+					, 'fontsize', 'emotion']
+			});
+
+			$(".reply_ms").click(function(e){
+				var cid = $(this).attr("cid");
+				var cname = $(this).attr("cname");
+				var content = "<span style='text-decoration:underline;cursor:pointer;color:blue;'>@"+
+					cname+"</span>&nbsp;";
+				UM.getEditor('id_body').setContent(content, false);
+				document.getElementById("anchor_scroll").click();
+			});
+		});
+	</script>
+{% endblock %}
+{% block content %}
+<section id="content">
+    <div class="wrap-content">
+        <div class="row block">
+            <div id="main-content" class="col-2-3">
+               <div class="wrap-col">
+				   <section>
+					    <a id="anchor_scroll" href="#submit_reply" style="display:none">点击这里本页跳转</a>
+						<form id="contact-form" method="post">
+							{% csrf_token %}
+							<script src="/static/js/jquery.validationEngine-zh_CN.js"></script>
+							<script src="/static/js/jquery.validationEngine.js"></script>
+							<fieldset id="submit_reply">
+								<!--<label><input name="email" value="Email" onBlur="if(this.value=='') this.value='Email'" onFocus="if(this.value =='Email' ) this.value=''" /></label> -->
+								<label><input name="user" placeholder="用户名" class="validate[required]"/></label>
+								<!--<textarea name='message' id="id_body"></textarea>-->
+								<script type="text/javascript" charset="utf-8"
+									src="/static/umeditor/umeditor.config.js"></script>
+								<script type="text/javascript" charset="utf-8"
+									src="/static/umeditor/umeditor.min.js"></script>
+								<script type="text/plain" name='message' id="id_body"
+											style="width:100%;height:120px;"></script>
+								<div class="buttons" style="padding-top:5px;">
+									<a href="#"
+										onClick="document.getElementById('contact-form').reset()">清除</a>
+									<a href="#" id='sendMsg' >留言</a>
+								</div>
+							</fieldset>
+						</form>
+					</section>
+					{% for blog in posts %}
+					<article style="padding:3px;margin-bottom: 20px;">
+						<div class="heading" style="height:20px;padding:3px;text-align: left;">
+							<h4>
+								● 来自 {{blog.author}}
+								发送于 {{blog.timestamp|date:"Y-m-d H:i"}}
+								<span class="reply_ms" cid="{{blog.guid}}" cname="{{blog.author}}"
+									  style="text-decoration:underline;cursor:pointer;">回复</span>
+							</h4>
+						</div>
+						<div class="content">
+							{{blog.body|safe}}
+						</div>
+					</article>
+					{% endfor %}
+				   	{% if currentAid != 1 %}
+						<a href="/message/index/{{currentAid|add:'-1'}}">[上一页]</a>
+					{% endif %}
+					{% if currentAid != allPages %}
+						<a href="/message/index/{{currentAid|add:'+1'}}">[下一页]</a>
+					{% endif %}
+				</div>
+            </div>
+			<div id="sidebar" class="col-1-3">
+				<div class="wrap-col">
+					<div class="box">
+						<div class="heading">
+							<h2>丑丑的留言板</h2>
+						</div>
+						<div class="content">
+							<a href="#" target="_blank">
+								<img src="/static/images/dazhu.jpg" style="border: 0px;width:100px;height:90px;" />
+							</a>
+							<p>
+								这个留言板没做什么美工，丑丑的，不过还可以用。哈哈。
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
+    </div>
+</section>
+{% endblock %}

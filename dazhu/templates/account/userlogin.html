@@ -1,0 +1,45 @@
+﻿{% extends "base.html" %}
+{% load utils %}
+{% block head %}
+	<script type="text/javascript">
+		$(function(){
+			var form = $("#contact-form");
+			$("#sendMsg").click(function(e){
+				form.submit();
+			});
+		});
+	</script>
+{% endblock %}
+<div></div>
+{% block content %}
+<section id="content">
+	<div class="wrap-content">
+		<div class="row block">
+			<div id="main-content" class="col-2-3">
+				<div class="wrap-col">
+					此操作需要再次验证密码
+					<form id="contact-form" method="post">
+						{% csrf_token %}
+						<fieldset>
+							<label>
+								<input name="user" placeholder="用户名" readonly="readonly" value="{% get_user %}" />
+							</label>
+							<label>
+								<input name="pwd" placeholder="密码" autocomplete="off"/>
+							</label>
+
+							<div class="buttons">
+								<a href="#"
+									onClick="document.getElementById('contact-form').reset()">清除</a>
+								<a href="#" id='sendMsg' >发送</a>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+{% endblock %}

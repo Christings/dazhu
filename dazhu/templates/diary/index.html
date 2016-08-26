@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{%load utils%}
+<div></div>
+{% block content %}
+<section id="content">
+	<div class="wrap-content">
+		<div class="row block">
+			<div id="main-content" class="col-2-3">
+				<div style="padding-left: 10px;">
+					<a href="/diary/edit/0">post a new</a> <a href="/diary/download/">download</a>
+				</div>
+				<div id='diaries' class="wrap-col"></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script type="text/javascript">
+	$(function() {
+		var pages = 1;
+		var maxHeight = 0;
+		getJs();
+		var wait = false;
+		$(document).scroll(
+		function() {
+			if (wait) {
+				return;
+			}
+
+			if ($(document).scrollTop() >= $("#content").height()-300
+			    && maxHeight < $(document).scrollTop()) {
+				pages = pages + 1;
+				if ($(document).scrollTop() > maxHeight) {
+					maxHeight = $(document).scrollTop();
+				}
+				wait = true;
+				getJs();
+			}
+		});
+
+		function getJs() {
+			$.getJSON("/diary/get_post/" + pages, function(json) {
+				$.each(json, function(i, item) {
+					var tempText =
+					'<article style="padding:0;">' +
+					'<div class="heading" style="padding-bottom:5px;">' +
+					'<h5>' +
+					item.timestamp + " " + item.weather + " " + item.weekday +
+					'<a style="padding-left:5px;" href="/diary/edit/'+ item.id  +'/">edit</a>'
+							+
+							'</h5>' +
+							'</div>' +
+							'<div class="content">' +
+							'<p>' + item.body + '</p>' +
+							'</div>' +
+							'</article>';
+					$("#diaries").append(tempText);
+				});
+				wait = false;
+			});
+		}
+	});
+</script>
+{% endblock %}
+
+

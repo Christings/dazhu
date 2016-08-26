@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+<div></div>
+{% block content %}
+<section id="content">
+<div class="wrap-content">
+<div class="row block">
+<div id="main-content" class="col-2-3">
+<div class="wrap-col">
+<article>
+[{{title|safe}}]<br>
+{% for blog in posts %}
+<h3>
+<span style="color:grey">[{{blog.category|safe}}]</span> <a href="/blog/details/{{blog.guid}}">{{blog.title}}</a>
+</h3>
+{% endfor %}
+</article>
+</div>
+</div>
+</div>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,77 @@
+﻿{% extends "base.html" %} {%load utils%}
+<div></div>
+{% block content %}
+<section id="content">
+	<div class="wrap-content">
+		<div class="row block">
+			<div id="main-content" class="col-2-3">
+				<div class="wrap-col">
+					<article>
+						{% if  user.is_authenticated %}
+								<div><a href="/admin/album/photoes/{{pic.id}}/change/">edit</a></div>
+						{% endif %}
+						<div class="heading">
+							<h2>
+								<a href="#">{{pic.showName}}</a>
+							</h2>
+						</div>
+						<div class="content">
+							<img id='pic' src="/static/album/normal/{{pic.rndName}}"
+								title='{{pic.showName}}' />
+						</div>
+						<div class="info">
+							<p>上传于 {{pic.timestamp|date:"Y-m-d H:i"}}</p>
+						</div>
+					</article>
+				</div>
+			</div>
+			<div id="sidebar" class="col-1-3">
+				<div class="wrap-col">
+					<div class="box">
+						<div class="heading">
+							<h2>Next {{next.showName}}</h2>
+						</div>
+						<div class="content">
+						{% if not next.rndName == "nomore" %}
+						  <a href="/album/show/{{next.rndName}}">
+								<img src="/static/album/mini/{{next.rndName}}" style="border: 0px;width:100px;height:90px;" />
+						  </a>
+						{% endif %}
+							
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		</div>		
+	</div>
+	
+</section>
+<script type="text/javascript">
+// 	$(function() {
+// 		$("<img/>").attr("src", $("#pic").attr("src")).load(function() {
+// 			/*
+// 			  如果要获取图片的真实的宽度和高度有三点必须注意
+// 			  1、需要创建一个image对象：如这里的$("<img/>")
+// 			  2、指定图片的src路径
+// 			  3、一定要在图片加载完成后执行如.load()函数里执行
+// 			 */
+// 			realWidth = this.width;
+// 			realHeight = this.height;
+// 			alert(realWidth);
+// 			//            //如果真实的宽度大于浏览器的宽度就按照100%显示
+// 			//             if(realWidth>=_winwh ){
+// 			//                    $(img).css("width","100%").css("height","auto");
+// 			//                 }
+// 			//                 else{//如果小于浏览器的宽度按照原尺寸显示
+// 			//                   $(img).css("width",realWidth+'px').css("height",realHeight+'px');
+// 			//                 }
+// 			var contentWidth = $("#main-content").width();
+// 			if (realWidth > contentWidth) {
+// 				$("#pic").attr("width",contentWidth);
+// 			}
+// 		});
+// 	});
+</script>
+{% endblock %}

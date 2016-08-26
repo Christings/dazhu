@@ -1,0 +1,205 @@
+{% load utils %}
+<!DOCTYPE html>
+<!--[if lt IE 7 ]>
+<html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>
+<html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>
+<html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+
+    <!-- Basic Page Needs
+  ================================================== -->
+    <meta charset="utf-8">
+    <title>{% get_title %}</title>
+    <meta name="description" content="这是大猪和大兔子的个人网站，用来做笔记。大猪是一个程序员。喜欢python，go，c#和大兔子。">
+    <meta name="author" content="大猪">
+
+    <!-- Mobile Specific Metas
+  ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+  ================================================== -->
+    <link rel="stylesheet" href="/static/css/zerogrid.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+
+    <!--[if lt IE 8]>
+    <div style=' clear: both; text-align:center; position: relative;'>
+        <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+            <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0"
+                 height="42" width="820"
+                 alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."/>
+        </a>
+    </div>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    <script src="/static/js/html5.js"></script>
+    <script src="/static/js/css3-mediaqueries.js"></script>
+    <![endif]-->
+
+    <link href='/static/images/favicon.ico' rel='icon' type='image/x-icon'/>
+    <!--<script src="/static/js/jquery.min.js" type="text/javascript"></script>-->
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+    <!--<script src="/static/js/GetLunarDate.js"></script>-->
+    {% block head %} {% endblock %}
+</head>
+<body>
+<div class="wrap-body zerogrid">
+    <!--------------Header--------------->
+    <header>
+        <div class="wrap-header">
+
+            <div class="top">
+                <div class="socials">
+                    <ul>
+                        <!-- 					<li><a href="#" title="facebook"><img  src="/static/images/socials/facebook-32x32.png"/></a></li> -->
+                        <!-- 					<li><a href="#" title="google"><img  src="/static/images/socials/google-32x32.png"/></a></li> -->
+                        <!-- 					<li><a href="#" title="twitter"><img  src="/static/images/socials/twitter-32x32.png"/></a></li> -->
+                        <!-- 					<li><a href="#" title="rss"><img  src="/static/images/socials/rss-32x32.png"/></a></li> -->
+                        <!-- 					<li><a href="#" title="youtube"><img  src="/static/images/socials/youtube-32x32.png"/></a></li> -->
+
+                        {% if user.is_authenticated %}
+                        <li>欢迎:<a href="/admin/">{% get_user %}</a></li>
+                        {% else %}
+                        <li><a href="/admin/">登录</a></li>
+                        {% endif %}
+                        <!--<li><span id="Clock"></span>&nbsp;<span id="LunarClock"></span></li>-->
+                    </ul>
+                </div>
+                <!--<div id="Clock" style="float:left;margin-top:5px;margin-left:5px;"></div>
+                <div id="LunarClock" style="float:left;margin-top:5px;margin-left:5px;"></div>-->
+                <!--<span id="LunarClock"></span>-->
+                <div id="search">
+                    <div id="search_button" class="button-search"></div>
+                    <input id="search_input" type="text" placeholder="搜索"/>
+                </div>
+            </div>
+
+            <div id="logo">
+                <a href="#"><h1>大猪 & 大兔</h1></a>
+                <p>这是我们的个人网站，欢迎大家光临。</p>
+            </div>
+
+            <nav>
+                <div class="wrap-nav">
+                    <div class="menu">
+                        <ul>
+                            <li><a href="/blog/">主页</a></li>
+                            <li><a href="/blog/list/">博客</a></li>
+                            <li><a href="/album/">相册</a></li>
+                            {% if user.is_authenticated %}
+                            <li><a href="/diary/">日记</a></li>
+                            <li><a href="/memo/list/">备忘</a></li>
+                            {% endif %}
+                            <li><a href="/message/">留言板</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+        </div>
+    </header>
+    <div class="copyrights">Collect from <a href="http://www.cssmoban.com/" title="网站模板">网站模板</a></div>
+    <!--------------Content--------------->
+    {% block content %} {% endblock %}
+    <!--------------Footer--------------->
+    <footer>
+        <div class="wrap-footer">
+            <div class="row">
+                <div class="col-1-3">
+                    <div class="wrap-col">
+                        <div class="box">
+                            <div class="heading"><h2>相册</h2></div>
+                            <div id='contentGallery' class="content gallery">
+                                <!-- 							<a href="#"><img src="/static/images/img1.jpg" width="120"/></a> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1-3">
+                    <div class="wrap-col">
+                        <div class="box">
+                            <div class="heading"><h2>关于网站</h2></div>
+                            <div class="content">
+                                <!-- 							<a href="#" target="_blank"><img src="/static/images/zerotheme.jpg" style="border: 0px;"/></a> -->
+                                <p>
+                                    <a href="#" target="_blank">Free Html5 Templates</a>
+                                    created by <a href="#">Zerotheme</a>.
+                                    <br/>
+                                    这是大猪和大兔的个人网站，模版来源于网络。仅用于个人笔记使用。:)
+                                    <br/>
+                                    大猪是一只非常非常大的猪，他每天和大兔子一起玩。
+                                    <br/>
+                                    大猪喜欢每天都吃很多好吃的。所以他有一只大肚肚。
+                                    <br/>
+                                    如有什么意见和建议，可以给我发邮件。yinzihao1@126.com
+                                    <br/>
+                                    热爱自由，世界和平。还有什么？先不说了。
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1-3">
+                    <div class="wrap-col">
+                        <div class="box">
+                            <div class="heading"><h2>友情链接</h2></div>
+                            <div class="content">
+                                <p><a href="http://www.webank.pw">幽鸿居</p>
+                                <p><a href="http://www.chuihei.win">锤黑wiki</p>
+                                <!-- 							<p>+1 (123) 444-5677 <br/> +1 (123) 444-5678</p> -->
+                                <!-- 							<p>Address: 123 TemplateAccess Rd1</p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>Copyright © 2016 - DaZhu</p>
+        </div>
+    </footer>
+    <script type="text/javascript">
+	$(function(){
+		$.getJSON("/album/get_first6/", function(json) {
+			$.each(json, function(i, item) {
+				var tempText = '<a href="'+'/album/show/'+ item.rndName +'" >' +
+				'<img src="/static/album/mini/'+ item.rndName +'" width="120" style="height:90px;"/></a>';
+
+				$("#contentGallery").append(tempText);
+			});
+		});
+
+		$("#search_button").click(
+			function(){
+				if($("#search_input").val()!=""){
+					window.location.href='/search?k='+encodeURI($("#search_input").val());
+				}
+			}
+		);
+
+		$("#search_input").keydown(function(event) {
+			if (event.keyCode == 13) {
+				if($("#search_input").val()!=""){
+					window.location.href='/search?k='+encodeURI($("#search_input").val());
+				}
+			}
+		});
+
+		//从服务器上获取初始时间
+		var currentTime = '{% get_time %}';
+		GetAllDate(currentTime);
+		
+	});
+
+
+    </script>
+</div>
+</body>
+</html>

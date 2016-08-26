@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+<div></div>
+{% block head %}
+<script type="text/javascript">
+    $(function(){
+
+    });
+</script>
+{% endblock %}
+{% block content %}
+<section id="content">
+    <div class="wrap-content">
+        <div class="row block">
+            <div id="main-content" class="col-2-3">
+               <div class="wrap-col">
+				   <section>
+                        <a href="/memo/create/">创建新的</a>
+                        {% for memo in memoes %}
+                        <h3>
+                            <span style="display:inline-block;min-width:72%;">
+                                <a href="/memo/edit/{{memo.id}}/">
+                                    {{memo.title|lower}}
+                                </a>
+                            </span>
+                            <span style="color:silver;font-size:14px;
+                                  padding-left:5px;font-style:italic;">
+                                    {{memo.timestamp|date:"Y-m-d H:i"}}
+                            </span>
+                        </h3>
+                        {% endfor %}
+                   </section>
+				</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% block head %}
+<!--引入CSS-->
+<link rel="stylesheet" type="text/css"
+	href="/static/ueditor/third-party/webuploader/webuploader.css">
+<link rel="stylesheet" type="text/css"
+	href="/static/css/album/style.css">
+
+{% endblock %} {%load utils%}
+<div></div>
+{% block content %}
+<section id="content">
+	<div class="wrap-content">
+		<!-- 		<div id="uploader" class="wu-example"> -->
+		<!--用来存放文件信息-->
+		<!-- 					<div id='thelist' class="uploader-list"></div> -->
+		<!-- 					<div id="picker">选择文件</div> -->
+		<!-- 					<button id="ctlBtn" class="btn btn-default">开始上传</button> -->
+
+		<!-- 		</div> -->
+		<div class="row block">
+			<div class="col-5-6">
+				<div class="wrap-col">
+					<div class="wrap-col">
+						<div class="box">
+							<div id='pics' class="content gallery">
+								{% for pic in posts %}
+								<div style='float: left; margin: 5px;'>
+									<a href="/album/show/{{pic.rndName}}" target='_blank'><img
+										style="height:90px;" src="/static/album/mini/{{pic.rndName}}" height="90"
+										width="120" title='{{pic.showName}}' /> </a>
+								</div>
+								{% endfor %}
+							</div>
+							<div id='info'></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+<!--引入JS-->
+<script type="text/javascript">
+	$(function() {
+		var pages = 1;
+		var maxHeight = 0;
+		var wait = false;
+		$(document).scroll(
+			function() {
+				if (wait) {
+					return;
+				}
+				if ($(document).scrollTop() >= $("#content").height()-100
+					&& maxHeight < $(document).scrollTop()) {
+					//$("#info").text($(document).scrollTop()+" "+$("#content").height());
+					pages= pages + 1;
+					if($(document).scrollTop()>maxHeight){
+						maxHeight = $(document).scrollTop();
+					}
+					wait = true;
+					getJs();
+				}
+			}
+		);
+
+		function getJs() {
+			$.getJSON("/album/get_post/"+pages, function(json) {
+				$.each(json, function(i, item) {
+					var tempText = "<div style='float: left; margin: 5px;'>"+
+						"<a href='/album/show/"+ item.rndName +"' target='_blank'><img style='height:90px;' "+
+						"src='/static/album/mini/"+ item.rndName +"' height='90'"+
+						" width='120' title='"+ item.showName +"' /> </a>"+
+						"</div>";
+					$("#pics").append(tempText);
+				});
+				wait = false;
+			});
+		}
+	});
+</script>
+
+{% endblock %}

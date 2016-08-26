@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{%load utils%}
+
+<div></div>
+{% block head %}
+	<link href="/static/css/lhgcalendar.css" rel="stylesheet"  type="text/css" media="all">	
+	<link rel="stylesheet" href="/static/css/validationEngine.jquery.css">	
+	<script src="/static/js/jquery.validationEngine-zh_CN.js"></script>	
+	<script src="/static/js/jquery.validationEngine.js"></script>
+{% endblock %} 
+
+{% block content %}
+<section id="content">
+	<div class="wrap-content">
+		<div class="row block">
+			<div id="main-content" class="col-2-3">
+				<div class="wrap-col">
+					<form id="contact-form" method="post">
+						{% csrf_token %}
+						<input type="hidden" id = 'diaryID' value="{{diary.id}}" />						
+						<article>
+							<div>
+								<label style="display: initial; vertical-align: middle;"
+									for="DiaryDate">日期 :</label> <input style="width: 80px;"
+									class="runcode,validate[required]" id="DiaryDate"
+									name="DiaryDate" value="{{diary.timestamp|date:'Y-m-d'}}" readonly="readonly">
+
+								<select id='weather' name='weather' class="validate[required]">
+									<option value="晴">晴</option>
+									<option value="阴">阴</option>
+									<option value="雨">雨</option>
+									<option value="雪">雪</option>
+									<option value="多云">多云</option>
+								</select>
+
+							</div>
+							<div class="content">
+								<textarea id='textbody' name='textbody' class="validate[required]"
+									style='padding: 0;'>{{diary.body}}</textarea>
+							</div>
+							<div>
+								<input style="width:30%;" type="submit" value='submit' /><input style="width:30%;margin-left:10px;" type="button" id="del" value="delete" />
+							</div>
+							
+						</article>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<script type="text/javascript" src="/static/js/lhgcalendar.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#weather").val('{{diary.weather}}');	
+		$('#DiaryDate').calendar({ format: 'yyyy-MM-dd' });
+		$('#contact-form').validationEngine(); 
+
+		$("#del").click(function(){
+		 	$.ajax({
+			    type: 'DELETE',
+			    url: '/diary/edit/{{diary.id}}/',
+			    data: {},
+			    beforeSend: function(xhr) {
+			        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+			    },
+			    success: function(data) {
+			    	window.location.href='/diary/';
+			    }
+			});
+		});
+
+
+	});
+</script>
+{% endblock %} 
+
