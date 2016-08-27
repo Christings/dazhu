@@ -36,13 +36,13 @@ $(document)
 					});
 					var ue = UE.getEditor('id_body', {
 						// 默认的编辑区域高度
-						initialFrameHeight : 450,
-						initialFrameWidth : 800,
+						initialFrameHeight : 400,
+						initialFrameWidth : "100%",
 						zIndex : 3,
 						autoHeightEnabled : 'false',
 						scaleEnabled : 'false',
 						aid : $("#id_guid").val(),
-						UEDITOR_HOME_URL:"/static/ueditor",
+						UEDITOR_HOME_URL:"/static/ueditor/",
 						toolbars: [[
 							'fullscreen', 'source', '|', 'undo', 'redo', '|',
 							'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
