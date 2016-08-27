@@ -22,7 +22,7 @@ DOMAIN_STR = "www.yinzihao.com.cn"
 SECRET_KEY = 'w&p^!3h-q2u37#6n@827329poo_z=0gddmqolomyu71hal_$l*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = False
 
@@ -145,3 +145,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = "F:/workspace/dazhu/dazhu/static/"
+STATICFILES_FINDERS = (
+'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+'django.contrib.staticfiles.finders.FileSystemFinder',
+)
