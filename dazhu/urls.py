@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^blog/', include('blog.urls')),
     url(r'^ueditor/', include('ueditor.urls')),
-    url(r'^chat/', include('chat.urls')),
+   # url(r'^chat/', include('chat.urls')),
     url(r'^album/', include('album.urls')),
     url(r'^diary/', include('diary.urls')),
     url(r'^search', include('search.urls')),
