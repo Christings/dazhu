@@ -207,49 +207,64 @@ from django.core.files.base import ContentFile
 import os
 
 def download(request):
-    doc = dom.Document()
-    root = doc.createElement("blogs")
-    doc.appendChild(root)
+    #download as xml
+    download_type = "txt"
+    if download_type == "xml":
+        doc = dom.Document()
+        root = doc.createElement("blogs")
+        doc.appendChild(root)
 
-    blogs = BlogPost.objects.all()
-    for blog in blogs:
-        blognode = doc.createElement("blog")
-        blognode.setAttribute("guid", blog.guid)
-        blognode.setAttribute("author", blog.author)
-        blognode.setAttribute("title", blog.title)
-        blognode.setAttribute("category", blog.category)
-        blognode.setAttribute("timestamp", blog.timestamp.strftime("%Y%m%d %H%M%S"))
-        body = doc.createElement("value")
-        bv = doc.createTextNode(blog.body)
-        body.appendChild(bv)
+        blogs = BlogPost.objects.all()
+        for blog in blogs:
+            blognode = doc.createElement("blog")
+            blognode.setAttribute("guid", blog.guid)
+            blognode.setAttribute("author", blog.author)
+            blognode.setAttribute("title", blog.title)
+            blognode.setAttribute("category", blog.category)
+            blognode.setAttribute("timestamp", blog.timestamp.strftime("%Y%m%d %H%M%S"))
+            body = doc.createElement("value")
+            bv = doc.createTextNode(blog.body)
+            body.appendChild(bv)
 
-        blognode.appendChild(body)
+            blognode.appendChild(body)
 
-        #attachment
-        ats = blog.attachment_set.all()
-        for at in ats:
-            atnode = doc.createElement("attachment")
-            atnode.setAttribute("sourceName", at.sourceName)
-            atnode.setAttribute("rndName", at.rndName)
-            blognode.appendChild(atnode)
+            #attachment
+            ats = blog.attachment_set.all()
+            for at in ats:
+                atnode = doc.createElement("attachment")
+                atnode.setAttribute("sourceName", at.sourceName)
+                atnode.setAttribute("rndName", at.rndName)
+                blognode.appendChild(atnode)
+            #comment
+            cms = blog.comment_set.all()
+            for cm in cms:
+                cmnode = doc.createElement("comment")
+                cmnode.setAttribute("author", cm.author)
+                cmnode.setAttribute("body", cm.body)
+                cmnode.setAttribute("timestamp", cm.timestamp.strftime("%Y%m%d %H%M%S"))
+                blognode.appendChild(cmnode)
 
+            root.appendChild(blognode)
 
-        #comment
-        cms = blog.comment_set.all()
-        for cm in cms:
-            cmnode = doc.createElement("comment")
-            cmnode.setAttribute("author", cm.author)
-            cmnode.setAttribute("body", cm.body)
-            cmnode.setAttribute("timestamp", cm.timestamp.strftime("%Y%m%d %H%M%S"))
-            blognode.appendChild(cmnode)
+        f = ContentFile(doc.toprettyxml("\t", "\n", "utf-8"))
+        response = HttpResponse(f.read(), content_type='xml')
+        response['Content-Disposition'] = 'attachment; filename=%s' % "hi.xml"
 
-        root.appendChild(blognode)
+    if download_type == "txt":
+        blogs = BlogPost.objects.all()
+        result = ""
+        for blog in blogs:
+            result += u"标题：" + blog.title + u"\r\n作者：" + blog.author + u"\r\n分类："\
+             + blog.category + u"\r\n时间：" + blog.timestamp.strftime("%Y%m%d %H:%M:%S") + "\r\n"
 
-    f = ContentFile(doc.toprettyxml("\t", "\n", "utf-8"))
+            result += tools.RemoveHttpStr(blog.body.replace("\n","\r\n").replace("</p>","\r\n").replace("&nbsp;"," ").replace("<br/>","\r\n"))
+            result += "\r\n\r\n"
 
-    response = HttpResponse(f.read(), content_type='xml')
-    response['Content-Disposition'] = 'attachment; filename=%s' % "hi.xml"
+        response = HttpResponse(result, content_type='txt')
+        response['Content-Disposition'] = 'attachment; filename=%s' % "hi.txt"
+    
     return response
+    
 
 import dazhu
 from ueditor.models import attachment

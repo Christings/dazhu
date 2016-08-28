@@ -10,11 +10,41 @@ import base64
 import re
 import HTMLParser
 import dazhu.settings as settings
+import random
+import time
 
 def GetRndStr():   
     rndByte = os.urandom(6)
     b64Str = base64.urlsafe_b64encode(rndByte)
     return b64Str
+
+def GetMap(input):
+    return chr(input + 97)
+ 
+def GetTimeCode(input=0):    
+    '''
+    0 - a
+    1 - b
+    25 - z
+    26 - aa
+    '''
+    if input == 0:
+        input = int(time.time())*100 + random.randint(1, 99)
+ 
+    result = ""
+    while True:
+        quotient = input // 26
+        remainder = input - quotient * 26
+        input = quotient
+        result = GetMap(remainder) + result
+        if quotient < 26:
+            if quotient == 0:
+                break
+            result = GetMap(quotient-1) + result
+            break
+    return result
+
+
 
 def RemoveHttpStr(val):
     return re.sub('<[^>]*>|&[^;]*;', '', val)

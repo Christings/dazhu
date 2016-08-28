@@ -17,7 +17,7 @@ class BlogPost(models.Model):
    
     def save(self, *args, **kwargs):
         if self.guid=="":
-            self.guid = tools.GetRndStr()
+            self.guid = tools.GetTimeCode()
         #do_something()
         super(BlogPost, self).save(*args, **kwargs) # Call the "real" save() method.
     
