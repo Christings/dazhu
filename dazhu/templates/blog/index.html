@@ -11,12 +11,12 @@
 					<article>
 						<div class="heading">
 							<h2>
-								<a href="/blog/details/{{blog.guid}}">{{blog.title|removeHtml}}</a>
+								<a href="/blog/details/{{blog.guid}}">{{blog.title|removeHtml:'20'}}</a>
 							</h2>
 						</div>
 						<div class="content">
 							<img src="{{blog.body|getPic}}" style='float:left;' width="250px" height="100px" />
-							<p>{{blog.body|removeHtml|cutSafe:'128'}}[...]</p>
+							<p>{{blog.body|removeHtml:'256'|safe}}<a href="/blog/details/{{blog.guid}}">[更多...]</a></p>
 
 						</div>
 						<div class="info">

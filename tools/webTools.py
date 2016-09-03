@@ -49,6 +49,28 @@ def GetTimeCode(input=0):
 def RemoveHttpStr(val):
     return re.sub('<[^>]*>|&[^;]*;', '', val)
 
+def RemoveHtmlTag(htmlstr,allowTags):
+    class parseLinks(HTMLParser.HTMLParser):
+        def __init__(self):
+            HTMLParser.HTMLParser.__init__(self)
+            self.result = ""           
+
+        def handle_starttag(self, tag, attrs):
+            if tag in allowTags:
+                self.result += self.get_starttag_text()
+
+        def handle_endtag(self, tag):
+            if tag in allowTags:
+                self.result += "</"+tag+">"
+
+        def handle_data(self, data):
+                self.result+= data
+
+    lParser = parseLinks()
+    lParser.feed(htmlstr)
+
+    return lParser.result
+
 def CutStringSafe(strIn, length):
     if length > len(strIn):
         return strIn

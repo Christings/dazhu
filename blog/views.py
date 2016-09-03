@@ -36,7 +36,7 @@ class index(TemplateView):
             result.append(temp)
             
         
-        context['posts'] = result[:5]       
+        context['posts'] = result[:10]       
         context['category'] = Category.objects.all()
         context['title'] = u'大猪大兔在一起'
         return context

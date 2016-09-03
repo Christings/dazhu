@@ -10,8 +10,19 @@ from django import template
 register = template.Library() 
 import urllib
 @register.filter 
-def removeHtml(value):
-    return tools.webTools.RemoveHttpStr(value)
+def removeHtml(value,length):
+    value = value.replace("\r\n","\n").replace("\n","<br/>").replace("</p>","<br/>")\
+    .replace("<br/>","#br/#")\
+    .replace("&nbsp;",'#nbsp;')
+    value = tools.webTools.RemoveHtmlTag(value, [""])
+    value = tools.webTools.CutStringSafe(value,int(length))
+    value = value.replace("#br/#","<br/>").replace("#nbsp;","&nbsp;")
+    while True:
+        if '<br/><br/>' in value:
+            value = value.replace('<br/><br/>','<br/>')
+        else:
+            break
+    return value
 
 @register.filter 
 def quote(value):
