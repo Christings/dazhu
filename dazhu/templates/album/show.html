@@ -8,7 +8,10 @@
 				<div class="wrap-col">
 					<article>
 						{% if  user.is_authenticated %}
-								<div><a href="/admin/album/photoes/{{pic.id}}/change/">edit</a></div>
+								<div>
+									<a href="/admin/album/photoes/{{pic.id}}/change/">编辑</a>
+									<a href="#">{{pic.phototype}}</a>
+								</div>
 						{% endif %}
 						<div class="heading">
 							<h2>

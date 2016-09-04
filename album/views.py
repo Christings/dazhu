@@ -183,7 +183,6 @@ def upload(request):
                 with open(file_path, 'wb+') as f:
                     for chunk in fileObj.chunks():
                         f.write(chunk)
-                tools.debug("start make small pic")
                 #make normal pic
                 im = Image.open(file_path)
 
@@ -195,7 +194,7 @@ def upload(request):
 
                 # make small pic            
                 im = Image.open(file_path)
-                im.thumbnail((120, 120))
+                im.thumbnail((180, 180))
 
                 #如果宽大于高
                 width = im.size[0]
