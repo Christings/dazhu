@@ -175,30 +175,64 @@ def upload(request):
     
         
         if fileExt.lower() in allowExt:
-            filePath = normal_folder + file_name + fileExt
+            file_path = normal_folder + file_name + "tmp" + fileExt
+            mini_path = mini_folder + file_name + fileExt
+            normal_path = normal_folder + file_name + fileExt
             
-            
-            tempPhoto = Photoes()
-            tempPhoto.rndName = file_name + fileExt
-            tempPhoto.showName = source_filename
-            tempPhoto.timestamp = datetime.datetime.now()
-            tempPhoto.phototype = 'private'
-            tempPhoto.save()
+            try:
+                with open(file_path, 'wb+') as f:
+                    for chunk in fileObj.chunks():
+                        f.write(chunk)
+                tools.debug("start make small pic")
+                #make normal pic
+                im = Image.open(file_path)
 
-            # destination = open(filePath, 'wb+')
-            # for chunk in fileObj.chunks():
-            #     destination.write(chunk)
-            # destination.close()
-            with open(filePath, 'wb+') as f:
-                for chunk in fileObj.chunks():
-                    f.write(chunk)
+                width = im.size[0]
+                height = im.size[1]
+                if width > 2048 or height > 2048:
+                    im.thumbnail((2048, 2048))
+                im.save(normal_path)
 
-            tools.debug("start make small pic")
-            # make small pic
-            normalPath = mini_folder + file_name + fileExt
-            im = Image.open(filePath)
-            im.thumbnail((120, 120))
-            im.save(normalPath)
+                # make small pic            
+                im = Image.open(file_path)
+                im.thumbnail((120, 120))
+
+                #如果宽大于高
+                width = im.size[0]
+                height = im.size[1]
+                if height // width > 90 // 120:
+                    #height 高了。以width为准 切height
+                    curHeight = width * 90 // 120
+                    dx = height - curHeight
+                    box = (0, dx / 2, width, curHeight + dx / 2)
+                    im = im.crop(box)
+                else:
+                    #width 大了，以height为准，切width
+                    curwidth = height * 120 // 90
+                    dx = width - curwidth
+                    box = (dx / 2, 0, curwidth + dx / 2, height)
+                    im = im.crop(box)
+
+                im.save(mini_path)
+
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+
+                tempPhoto = Photoes()
+                tempPhoto.rndName = file_name + fileExt
+                tempPhoto.showName = source_filename
+                tempPhoto.timestamp = datetime.datetime.now()
+                tempPhoto.phototype = 'private'
+                tempPhoto.save()
+            except Exception as errors:
+                tools.debug("upload album error",errors)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                if os.path.isfile(mini_path):
+                    os.remove(mini_path)
+                if os.path.isfile(normal_path):
+                    os.remove(normal_path)
+
             
     return response
 
