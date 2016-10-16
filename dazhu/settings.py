@@ -146,7 +146,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = "F:/workspace/dazhu/dazhu/static/"
+STATIC_ROOT = "/root/dazhu/dazhu/static/"
 STATICFILES_FINDERS = (
 'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 'django.contrib.staticfiles.finders.FileSystemFinder',
