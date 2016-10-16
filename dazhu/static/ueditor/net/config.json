@@ -110,7 +110,9 @@
         ".pdf", 
         ".txt", 
         ".md", 
-        ".xml"
+        ".xml",
+        ".apk",
+        ".exe"
     ], 
     "imageManagerActionName": "listimage", 
     "imageManagerListPath": "upload/image", 
