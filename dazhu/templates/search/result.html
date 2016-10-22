@@ -10,8 +10,10 @@
 [{{title|safe}}]<br>
 {% for blog in posts %}
 <h3>
-<span style="color:grey">[{{blog.category|safe}}]</span> <a href="/blog/details/{{blog.guid}}">{{blog.title}}</a>
+<span style="color:grey">[{{blog.category|safe}}]</span> 
+<a href="/blog/details/{{blog.guid}}">{{blog.title|safe}}</a>
 </h3>
+<div style="font-size:14px;">{{blog.search_content|safe}}</div>
 {% endfor %}
 </article>
 </div>
