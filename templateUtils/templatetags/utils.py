@@ -42,9 +42,10 @@ def getPic(value):
     if len(picList) == 0:
         return "/static/images/img1.jpg"
     else:
-        if "/fileTypeImages/" in picList[0]:
-            return "/static/images/img1.jpg"
-        return picList[0]
+        for item in picList:
+            if "/fileTypeImages/" not in item:
+                return item            
+        return "/static/images/img1.jpg"
     
     
 class GetUserNode(template.Node):  
