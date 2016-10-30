@@ -11,10 +11,12 @@ register = template.Library()
 import urllib
 @register.filter 
 def removeHtml(value,length):
-    value = value.replace("\r\n","\n").replace("\n","<br/>").replace("</p>","<br/>")\
-    .replace("<br/>","#br/#")\
+    value = value.replace("<br/>","#br/#")\
+    .replace("\r\n","\n")\
+    .replace("\n","#br/#")\
+    .replace("</p>","#br/#")\
     .replace("&nbsp;",'#nbsp;')
-    value = tools.webTools.RemoveHtmlTag(value, [""])
+    value = tools.webTools.RemoveHttpStr(value)
     value = tools.webTools.CutStringSafe(value,int(length))
     value = value.replace("#br/#","<br/>").replace("#nbsp;","&nbsp;")
     while True:

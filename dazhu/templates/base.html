@@ -44,7 +44,7 @@
     <link href='/static/images/favicon.ico' rel='icon' type='image/x-icon'/>
     <!--<script src="/static/js/jquery.min.js" type="text/javascript"></script>-->
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
-    <!--<script src="/static/js/GetLunarDate.js"></script>-->
+    <script src="/static/js/GetLunarDate.js"></script>
     {% block head %} {% endblock %}
 </head>
 <body>
@@ -70,9 +70,9 @@
                         <!--<li><span id="Clock"></span>&nbsp;<span id="LunarClock"></span></li>-->
                     </ul>
                 </div>
-                <!--<div id="Clock" style="float:left;margin-top:5px;margin-left:5px;"></div>
-                <div id="LunarClock" style="float:left;margin-top:5px;margin-left:5px;"></div>-->
-                <!--<span id="LunarClock"></span>-->
+                <div id="Clock" style="float:left;margin-top:5px;margin-left:5px;"></div>
+                <div id="LunarClock" style="float:left;margin-top:5px;margin-left:5px;"></div>
+                <span id="LunarClock"></span>
                 <div id="search">
                     <div id="search_button" class="button-search"></div>
                     <input id="search_input" type="text" placeholder="搜索"/>
@@ -193,8 +193,8 @@
 		});
 
 		//从服务器上获取初始时间
-		// var currentTime = '{% get_time %}';
-		// GetAllDate(currentTime);
+		var currentTime = '{% get_time %}';
+		GetAllDate(currentTime);
 		
 	});
 

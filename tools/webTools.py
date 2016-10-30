@@ -47,13 +47,14 @@ def GetTimeCode(input=0):
 
 
 def RemoveHttpStr(val):
-    return re.sub('<[^>]*>|&[^;]*;', '', val)
+    # '<[^>]*>|&[^;]*;'
+    return re.sub('<[^>]*>', '', val)
 
 def RemoveHtmlTag(htmlstr,allowTags):
     class parseLinks(HTMLParser.HTMLParser):
         def __init__(self):
             HTMLParser.HTMLParser.__init__(self)
-            self.result = ""           
+            self.result = ""
 
         def handle_starttag(self, tag, attrs):
             if tag in allowTags:
@@ -91,7 +92,26 @@ def getHtmlPics(strHtml):
     lParser = parseLinks()
     lParser.feed(strHtml)
     return lParser.links
-            
+
+def trim_string(in_str, trim_list):
+    in_str = in_str.strip()
+    while True:
+        match = 0
+        for trim_key in trim_list:
+            if in_str.startswith(trim_key):
+                in_str = in_str[len(trim_key):]
+                match += 1
+        if match == 0:
+            break
+    while True:
+        match = 0
+        for trim_key in trim_list:
+            if in_str.endswith(trim_key):
+                in_str = in_str[:len(in_str) - len(trim_key)]
+                match += 1
+        if match == 0:
+            break
+    return in_str
 
 def readFile(filePath):
     data = None
