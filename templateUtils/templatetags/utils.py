@@ -36,7 +36,16 @@ def quote(value):
 
 @register.filter 
 def cutSafe(value, length):
-    return tools.webTools.CutStringSafe(value, int(length))
+    data = tools.webTools.CutStringSafe(value, int(length))
+    # tools.webTools.debug("cutSafe", data)
+    return data
+
+@register.filter 
+def removeTags(value, tags):
+    tags = tags.split(",")
+    data = tools.webTools.RemoveSpecHtmlTag(value, tags)
+    # tools.webTools.debug("cutSafe", data)
+    return data
 
 @register.filter 
 def getPic(value):

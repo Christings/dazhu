@@ -72,10 +72,41 @@ def RemoveHtmlTag(htmlstr,allowTags):
 
     return lParser.result
 
+def RemoveSpecHtmlTag(htmlstr,removedTag):
+    class TagDropper(HTMLParser.HTMLParser):
+        def __init__(self, tags_to_drop):
+            HTMLParser.HTMLParser.__init__(self)
+            self._text = []
+            self._tags_to_drop = set(tags_to_drop)
+        def clear_text(self):
+            self._text = []
+        def get_text(self):
+            return ''.join(self._text)
+        def handle_starttag(self, tag, attrs):
+            if tag not in self._tags_to_drop:
+                self._text.append(self.get_starttag_text())
+        def handle_endtag(self, tag):
+            if tag not in self._tags_to_drop:
+                self._text.append('</{0}>'.format(tag))
+        def handle_data(self, data):
+            self._text.append(data)
+
+    lParser = TagDropper(removedTag)
+    lParser.feed(htmlstr)
+    return lParser.get_text()
+
 def CutStringSafe(strIn, length):
     if length > len(strIn):
         return strIn
     else:
+        temp_length = length
+        while temp_length >=0:
+            temp_length -= 1
+            if strIn[temp_length] == '<':
+                length = temp_length
+            if strIn[temp_length] == '>':
+                break
+
         return strIn[0:length]
     
 def getHtmlPics(strHtml):

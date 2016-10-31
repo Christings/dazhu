@@ -15,9 +15,11 @@
 							</h2>
 						</div>
 						<div class="content">
-							<img src="{{blog.body|getPic}}" style='float:left;height:178px;' width="250px" height="178px" />
-							<p style="min-height:178px;">{{blog.body|removeHtml:'700'|safe}}<a href="/blog/details/{{blog.guid}}">[查看更多...]</a></p>
-
+							<img src="{{blog.body|getPic}}" style='float:left;height:178px;' width="250px" height="178px" />					
+							<p style="min-height:178px;">{{blog.body|removeHtml:'700'|safe}}
+								<a href="/blog/details/{{blog.guid}}">[查看更多...]</a>
+							</p>
+							<!--{{blog.body|cutSafe:'700'| safe}}-->
 						</div>
 						<div class="info">
 							<p>
