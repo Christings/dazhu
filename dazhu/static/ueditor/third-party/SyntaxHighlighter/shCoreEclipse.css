@@ -98,12 +98,18 @@
   overflow: hidden !important;
   white-space: pre !important;
 }
+
+
 .syntaxhighlighter table td.gutter .line {
   text-align: right !important;
   padding: 0 0.5em 0 1em !important;
+  white-space: pre !important;
+  /*取消行号*/
+  display: none;
 }
 .syntaxhighlighter table td.code .line {
   padding: 0 1em !important;
+  border-left: 3px solid #d4d0c8 !important;
 }
 .syntaxhighlighter.nogutter td.code .container textarea, .syntaxhighlighter.nogutter td.code .line {
   padding-left: 0em !important;
