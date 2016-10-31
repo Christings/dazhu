@@ -2,65 +2,11 @@
 {%load utils%}
 <div></div>
 {% block head %}
-	<link rel="stylesheet" href="/static/css/validationEngine.jquery.css">	
-
-
+	<link rel="stylesheet" href="/static/css/validationEngine.jquery.css">
 	<link href="/static/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css"
 		  rel="stylesheet" type="text/css" media="all" />
-    <script type="text/javascript"
-			src="/static/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
-	<script type="text/javascript">
-        SyntaxHighlighter.all();
-    </script>
-
 	<link href="/static/umeditor/themes/default/css/umeditor.min.css"
 	  type="text/css" rel="stylesheet">
-
-	<script type="text/javascript">
-		$(function(){
-			var form = $("#contact-form");
-			form.validationEngine();
-			$("#sendMsg").click(function(e){
-				e.preventDefault();
-				if(!form.validationEngine('validate')){
-					return;
-				}
-				form.submit();
-			});
-
-			var ue = UM.getEditor('id_body', {
-				toolbar: ['forecolor', 'backcolor', 'bold', 'fontfamily'
-					, 'fontsize', 'emotion']
-			});
-
-			$("#doanswer").click(function(e){
-				$.ajax({
-					type: 'post',
-					url: '/blog/get_content/',
-					data: {aid:'{{ blog.guid }}',answer:$("#answerstr").val()},
-					beforeSend: function(xhr) {
-						xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-					},
-					success: function(data) {
-						if(data.indexOf("error")>-1){
-							alert("答案错误!");
-							return;
-						}
-						$("#blog_content").html(data);
-					}
-				});
-			});
-
-			$(".reply_cms").click(function(e){
-				var cid = $(this).attr("cid");
-				var cname = $(this).attr("cname");
-				var content = "<span style='text-decoration:underline;cursor:pointer;color:blue;'>@"+
-					cname+"</span>&nbsp;";
-				UM.getEditor('id_body').setContent(content, false);
-				document.getElementById("anchor_scroll").click();
-			});
-		});
-	</script>
 {% endblock %}
 {% block content %}
 <section id="content">
@@ -106,7 +52,7 @@
 							<form id="contact-form" method="post">
 								{% csrf_token %}
 								<script src="/static/js/jquery.validationEngine-zh_CN.js"></script>
-								<script src="/static/js/jquery.validationEngine.js"></script>
+								<script src="/static/js/jquery.validationEngine.min.js"></script>
 								<fieldset>
 									<input type="hidden" name="aid" value='{{blog.guid}}' />
 									<!--<label><input name="email" value="Email" onBlur="if(this.value=='') this.value='Email'" onFocus="if(this.value =='Email' ) this.value=''" /></label> -->
@@ -167,3 +113,55 @@
 	</div>
 </section>
 {% endblock %}
+{% block script %}
+<script type="text/javascript"
+		src="/static/ueditor/third-party/SyntaxHighlighter/shCore.min.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		SyntaxHighlighter.all();
+		var form = $("#contact-form");
+		form.validationEngine();
+		$("#sendMsg").click(function(e){
+			e.preventDefault();
+			if(!form.validationEngine('validate')){
+				return;
+			}
+			form.submit();
+		});
+
+		var ue = UM.getEditor('id_body', {
+			toolbar: ['forecolor', 'backcolor', 'bold', 'fontfamily'
+				, 'fontsize', 'emotion']
+		});
+
+		$("#doanswer").click(function(e){
+			$.ajax({
+				type: 'post',
+				url: '/blog/get_content/',
+				data: {aid:'{{ blog.guid }}',answer:$("#answerstr").val()},
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+				},
+				success: function(data) {
+					if(data.indexOf("error")>-1){
+						alert("答案错误!");
+						return;
+					}
+					$("#blog_content").html(data);
+				}
+			});
+		});
+
+		$(".reply_cms").click(function(e){
+			var cid = $(this).attr("cid");
+			var cname = $(this).attr("cname");
+			var content = "<span style='text-decoration:underline;cursor:pointer;color:blue;'>@"+
+				cname+"</span>&nbsp;";
+			UM.getEditor('id_body').setContent(content, false);
+			document.getElementById("anchor_scroll").click();
+		});
+	});
+</script>
+{% endblock %}
+
