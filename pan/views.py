@@ -26,7 +26,10 @@ class index(TemplateView):
         for item in files:            
             tools.debug("pan index get_context_data item", item)
             if os.path.isfile(subfolder + item):
-                item = item.decode(sys.stdin.encoding)
+                stdin_encoding = sys.stdin.encoding
+                if stdin_encoding == None:
+                    stdin_encoding = "ANSI_X3.4-1968"
+                item = item.decode(stdin_encoding)
                 tempfile = tempFile()
                 tempfile.filename = item
                 tempfile.filelength = os.path.getsize(subfolder + item)
