@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^message/', include('message.urls')),
     url(r'^account/', include('account.urls')),
     url(r'^memo/', include('memo.urls')),
+    url(r'^pan/', include('pan.urls')),
     url(r'^(.*)/(.*)/', include('cms.urls')),
 
 ]

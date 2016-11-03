@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{%load utils%}
+<div></div>
+{% block content %}
+<section id="content">
+	<div class="wrap-content">
+		<div class="row block">
+			<div id="main-content" class="col-2-3">
+				<div class="wrap-col">	
+                    <div>
+                        <input id="dp" type="text" style="width:70%;" placeholder="download_path">
+          		        <button id="go">download</button>
+                    </div>				 
+	          		 {% for item in downloadfiles %}
+					         <div>
+                                <a style="display:inline-block;min-width:65%;" href="/static/pan/{{ item.filename }}">
+                                    {{ item.filename }}
+                                </a>
+                                大小：{{item.filelength}}
+                                <a href="/pan/delete?dp={{item.filename}}">删除</a>
+                             </div>
+						 {% endfor %}				
+				</div>
+			</div>
+			<div id="sidebar" class="col-1-3">
+				<div class="wrap-col">
+					<div class="box">
+						<div class="heading">
+							<h2>About us</h2>
+						</div>
+						<div class="content">
+							<a href="#" target="_blank"><img
+								src="/static/images/zerotheme.jpg" style="border: 0px;" /></a>
+							<p>
+								Free Html5 Templates created by <a href="#">Zerotheme</a>. You
+								can use and modify the template for both personal and commercial
+								use. You must keep all copyright information and credit links in
+								the template and associated files.
+							</p>
+						</div>
+					</div>		
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+	$(function(){
+        $("#go").click(function(e){
+            alert("后台正在下载，请等待，不要重复提交。过一阵子刷新即可。");
+			window.location.href='/pan/post?dp='+ $("#dp").val();
+		});
+	});
+</script>
+{% endblock %}
+
