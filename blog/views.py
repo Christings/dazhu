@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import redirect
 from datetime import datetime
 from ip_filter.views import ip_filter
+import markdown
 
 
 class index(TemplateView):    
@@ -141,7 +142,8 @@ class details(TemplateView):
         
         if blog == None:
             return HttpResponse("cant find target blog.")
-   
+            
+        blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra', 'codehilite'])
         category = Category.objects.all()
 
         # if self.check_answer(blog):

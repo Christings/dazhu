@@ -20,41 +20,56 @@ $(document)
 						});
 						$("#id_category").val(cate_val);
 					});
-
-					// 处理ueditor
+					//处理markdown
 					var body_parent = $("#id_body").parent();
 					var body_val = $("#id_body").val();
-
 					$("#id_body").remove();
-
-					var body = "<div id='bodycontent'><script id=\"id_body\" name=\"body\" class=\"vLargeTextField\" type=\"text/plain\" >"
-							+ body_val + "</script><div>";
+					var body = "<div id='bodycontent'><div>";
 					body_parent.append(body);
+					testEditor = editormd("bodycontent", {
+						width   : "70%",
+						value	: body_val,
+						name	: "body",
+						height  : 640,
+						syncScrolling : "single",
+						path    : "/static/editor.md/lib/"
+					});
 
-					$("#bodycontent").css({
-						"margin-left" : $("#bodycontent").prev().width() + 12
-					});
-					var ue = UE.getEditor('id_body', {
-						// 默认的编辑区域高度
-						initialFrameHeight : 400,
-						initialFrameWidth : "100%",
-						zIndex : 3,
-						autoHeightEnabled : 'false',
-						scaleEnabled : 'false',
-						aid : $("#id_guid").val(),
-						UEDITOR_HOME_URL:"/static/ueditor/",
-						toolbars: [[
-							'fullscreen', 'source', '|', 'undo', 'redo', '|',
-							'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
-							'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
-							'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
-							'directionalityltr', 'directionalityrtl', 'indent', '|',
-							'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
-							'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-							 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
-							'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
-							'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
-							'print', 'preview', 'searchreplace', 'help', 'drafts'
-						]]
-					});
+
+					// 处理ueditor
+					// var body_parent = $("#id_body").parent();
+					// var body_val = $("#id_body").val();
+
+					// $("#id_body").remove();
+
+					// var body = "<div id='bodycontent'><script id=\"id_body\" name=\"body\" class=\"vLargeTextField\" type=\"text/plain\" >"
+					// 		+ body_val + "</script><div>";
+					// body_parent.append(body);
+
+					// $("#bodycontent").css({
+					// 	"margin-left" : $("#bodycontent").prev().width() + 12
+					// });
+					// var ue = UE.getEditor('id_body', {
+					// 	// 默认的编辑区域高度
+					// 	initialFrameHeight : 400,
+					// 	initialFrameWidth : "100%",
+					// 	zIndex : 3,
+					// 	autoHeightEnabled : 'false',
+					// 	scaleEnabled : 'false',
+					// 	aid : $("#id_guid").val(),
+					// 	UEDITOR_HOME_URL:"/static/ueditor/",
+					// 	toolbars: [[
+					// 		'fullscreen', 'source', '|', 'undo', 'redo', '|',
+					// 		'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+					// 		'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+					// 		'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+					// 		'directionalityltr', 'directionalityrtl', 'indent', '|',
+					// 		'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+					// 		'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+					// 		 'insertimage', 'emotion', 'scrawl', 'insertvideo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
+					// 		'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
+					// 		'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+					// 		'print', 'preview', 'searchreplace', 'help', 'drafts'
+					// 	]]
+					// });
 				});
