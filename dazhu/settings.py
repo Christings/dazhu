@@ -22,7 +22,7 @@ DOMAIN_STR = "www.yinzihao.com.cn"
 SECRET_KEY = 'w&p^!3h-q2u37#6n@827329poo_z=0gddmqolomyu71hal_$l*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = False
 

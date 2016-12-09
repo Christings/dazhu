@@ -30,6 +30,7 @@ $(document)
 						width   : "70%",
 						value	: body_val,
 						name	: "body",
+						emoji	: true,
 						height  : 640,
 						syncScrolling : "single",
 						path    : "/static/editor.md/lib/"
