@@ -15,6 +15,12 @@ class AttachmentAdminForm(forms.ModelForm):
 class AttachmentAdmin(admin.ModelAdmin):
     list_display = ('get_title', 'sourceName','rndName',)
     #readonly_fields = ('title',)
+    actions = ['delete_selected']
+    def delete_selected(self, request, obj):
+        for o in obj.all():            
+            o.delete()
+        return delete_selected_(self, request, obj)
+        
     def get_title(self, obj):
         return obj.blog.title
     

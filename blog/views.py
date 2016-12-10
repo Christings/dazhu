@@ -16,7 +16,6 @@ from datetime import datetime
 from ip_filter.views import ip_filter
 import markdown
 
-
 class index(TemplateView):    
     template_name = "blog/index.html"
 
@@ -34,6 +33,7 @@ class index(TemplateView):
         for item in posts:
             temp = item
             temp.commentsCount = item.comment_set.count()
+            temp.body = markdown.markdown(temp.body)
             result.append(temp)
             
         
