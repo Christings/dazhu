@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 import random
 from models import BlogPost
 import dazhu.settings
+import account.secu as secu
 
 def convert_name_html_valid(input_name):
     file_name = os.path.split(input_name)
@@ -17,6 +18,7 @@ def convert_name_html_valid(input_name):
     return quote_name_arr[0] + quote_name_arr[1]
 
 @csrf_exempt
+@secu.login_filter
 def upload_files(request):
     class _Result(object):
         def __init__(self):
