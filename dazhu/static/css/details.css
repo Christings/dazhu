@@ -1,3 +1,14 @@
+.codehilite {
+    width:101%;
+    padding: 3px;
+    background-color: #ffffcc;
+    white-space:normal;
+    border-radius:10px;
+    -moz-border-radius:10px; /* Old Firefox */
+}
+
+.codehilite span{word-break: normal;word-wrap:break-word; white-space:normal;}
+
 #blog_content h1{
 	padding-bottom: 0.3em;
     font-size: 2.25em;
@@ -12,6 +23,16 @@
     font-weight: bold;
     line-height: 1.4;
     font-family: "Microsoft YaHei", Helvetica, "Meiryo UI", "Malgun Gothic", "Segoe UI", "Trebuchet MS", "Monaco", monospace, Tahoma, STXihei, "华文细黑", STHeiti, "Helvetica Neue", "Droid Sans", "wenquanyi micro hei", FreeSans, Arimo, Arial, SimSun, "宋体", Heiti, "黑体", sans-serif;
+}
+
+#blog_content ol{
+    display: block;
+    list-style-type: decimal;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
 }
 
 #blog_content h2 {

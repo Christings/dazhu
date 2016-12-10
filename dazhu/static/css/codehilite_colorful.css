@@ -1,6 +1,4 @@
-.codehilite {width:101%; padding: 3px; background-color: #F7F7F7;border: 1px solid #bbbbbb;white-space:normal;}
-.codehilite span{word-break: normal;word-wrap:break-word; white-space:normal;}
-
+/*https://github.com/jwarby/jekyll-pygments-themes*/
 .codehilite .hll { background-color: #ffffcc }
 .codehilite .c { color: #808080 } /* Comment */
 .codehilite .err { color: #F00000; background-color: #F0A0A0 } /* Error */

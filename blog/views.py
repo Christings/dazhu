@@ -143,7 +143,10 @@ class details(TemplateView):
         if blog == None:
             return HttpResponse("cant find target blog.")
             
-        blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra', 'codehilite'])
+        blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra',
+        "markdown.extensions.nl2br",
+        'markdown.extensions.sane_lists',
+         'codehilite'])
         category = Category.objects.all()
 
         # if self.check_answer(blog):
