@@ -48,7 +48,7 @@ $(document)
 				syncScrolling : "single",
 				path    : "/static/editor.md/lib/",
 				imageUpload    : true,
-				imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp", "txt"],
+				imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp", "txt", "zip"],
 				imageUploadURL : "/blog/upload?aid="+$("#id_guid").val(),
 			});
 
