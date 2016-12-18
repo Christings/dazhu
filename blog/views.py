@@ -197,8 +197,8 @@ class details(TemplateView):
 
 @csrf_protect
 def get_content(request):
-    aid = request.POST["aid"]
-    answer = request.POST["answer"]    
+    aid = request.GET["aid"]
+    answer = request.GET["answer"]    
     tempblog = BlogPost.objects.get(guid=aid)
     tools.debug("getcontent",aid,answer,tempblog.answer)
     if tempblog.answer == answer:

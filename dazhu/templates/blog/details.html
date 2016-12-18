@@ -151,7 +151,7 @@
 
 		function get_content(answer_str){
 			$.ajax({
-				type: 'post',
+				type: 'get',
 				url: '/blog/get_content/',
 				data: {aid:'{{ blog.guid }}',answer:answer_str},
 				beforeSend: function(xhr) {
