@@ -4,13 +4,14 @@
 {% block head %}
 	<link rel="stylesheet" href="/static/css/validationEngine.jquery.css">
 	<!--<link href="/static/ueditor/third-party/SyntaxHighlighter/shCoreEclipse.css"
-		  rel="stylesheet" type="text/css" media="all" />-->
+			rel="stylesheet" type="text/css" media="all" />-->
 	<link href="/static/umeditor/themes/default/css/umeditor.min.css"
-	  type="text/css" rel="stylesheet">
+		type="text/css" rel="stylesheet">
 	<link href="/static/css/codehilite_colorful.css"
-	  type="text/css" rel="stylesheet">
-	  <link href="/static/css/details.css"
-	  type="text/css" rel="stylesheet">
+		type="text/css" rel="stylesheet">
+	<link rel="stylesheet" href="/static/css/details.css" />
+
+	<link rel="stylesheet" href="/static/editor.md/css/editormd.preview.css" />
 {% endblock %}
 {% block content %}
 <section id="content">
@@ -29,18 +30,8 @@
 								<div><a href="/admin/blog/blogpost/{{blog.guid}}/change/">edit</a></div>
 						{% endif %}
 
-						<div id="blog_content" class="content">
-							{% ifequal  blog.question "" %}
-								{{blog.body|safe}}
-							{% else %}
-							    <div>
-									回答问题查看文章 : {{ blog.question }}
-									<br>
-									<input style="border:1px solid black;" id="answerstr" type="text" value=""/>
-									<input style="border:1px solid black;" id="doanswer" type="button" value="回答"/>
-								</div>
-							{% endifequal %}
-						</div>
+						<div id="blog_content" class="content"></div>
+						
 						<div class="info" >
 							<p>
 								来自 {{blog.author}} 写于 {{blog.timestamp|date:'Y-m-d H:i'}} -
@@ -51,7 +42,7 @@
 					</article>
 					<section>
 						<a id="anchor_scroll" href="#submit_reply" style="display:none">点击这里本页跳转</a>
-						<h3 id="submit_reply">留下评论</h3>
+						<h3 id="submit_reply">评论</h3>
 						{% if blog.allow_comment %}
 							<form id="contact-form" method="post">
 								{% csrf_token %}
@@ -83,6 +74,7 @@
 						{% endif %}
 						
 					</section>
+					<section>
 					<h4>评论:</h4>
 					{% for cm in comments %}
 					<div style="padding-top:2;padding-left:10;margin:0;">
@@ -97,6 +89,8 @@
 						</div>
 					</div>
 					{% endfor %}
+					</section>
+					
 				</div>
 			</div>
 			<div id="sidebar" class="col-1-3">
@@ -122,12 +116,73 @@
 {% block script %}
 <!--<script type="text/javascript"
 		src="/static/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>-->
+<script src="/static/editor.md/lib/marked.min.js"></script>
+<script src="/static/editor.md/lib/prettify.min.js"></script>
+
+<script src="/static/editor.md/lib/raphael.min.js"></script>
+<script src="/static/editor.md/lib/underscore.min.js"></script>
+<script src="/static/editor.md/lib/sequence-diagram.min.js"></script>
+<script src="/static/editor.md/lib/flowchart.min.js"></script>
+<script src="/static/editor.md/lib/jquery.flowchart.min.js"></script>
+
+<script src="/static/editor.md/editormd.js"></script>
 
 <script type="text/javascript">
 	$(function(){
+		function markdown_to_html(markdown){              
+			$("#blog_content").html("");      
+			testEditormdView = editormd.markdownToHTML("blog_content", {
+				markdown        : markdown ,//+ "\r\n" + $("#append-test").text(),
+				//htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
+				htmlDecode      : "style,script,iframe",  // you can filter tags decode
+				//toc             : false,
+				tocm            : true,    // Using [TOCM]
+				//tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+				//gfm             : false,
+				//tocDropdown     : true,
+				// markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+				emoji           : true,
+				taskList        : true,
+				tex             : true,  // 默认不解析
+				flowChart       : true,  // 默认不解析
+				sequenceDiagram : true,  // 默认不解析
+			});                    
+		}
+
+		function get_content(answer_str){
+			$.ajax({
+				type: 'post',
+				url: '/blog/get_content/',
+				data: {aid:'{{ blog.guid }}',answer:answer_str},
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+				},
+				success: function(data) {
+					if(data == 'error'){
+						alert("答案错误!");
+						return;
+					}
+					markdown_to_html(data);
+				}
+			});
+		}
+
+		var blog_question = "{{ blog.question }}";
+		if(blog_question != ""){
+			var question_html = '<div>' +
+									'验证问题 : {{ blog.question }}' +
+									'<br>' +
+									'<input style="border:1px solid black;" id="answerstr" type="text" value=""/> &nbsp;' +
+									'<input style="border:1px solid black;" id="doanswer" type="button" value="回答"/>' +
+								'</div>';
+			$("#blog_content").html(question_html);
+		}else{			
+			get_content("");
+		}
+
 		// SyntaxHighlighter.all();
-		// var form = $("#contact-form");
-		// form.validationEngine();
+		var form = $("#contact-form");
+		form.validationEngine();
 		$("#sendMsg").click(function(e){
 			e.preventDefault();
 			if(!form.validationEngine('validate')){
@@ -142,21 +197,7 @@
 		});
 
 		$("#doanswer").click(function(e){
-			$.ajax({
-				type: 'post',
-				url: '/blog/get_content/',
-				data: {aid:'{{ blog.guid }}',answer:$("#answerstr").val()},
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-				},
-				success: function(data) {
-					if(data.indexOf("error")>-1){
-						alert("答案错误!");
-						return;
-					}
-					$("#blog_content").html(data);
-				}
-			});
+			get_content($("#answerstr").val());
 		});
 
 		$(".reply_cms").click(function(e){

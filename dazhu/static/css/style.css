@@ -131,13 +131,17 @@ nav .wrap-nav{display: inline-block; background: #91DBD1; width: 100%;}
 /* -------------------------------------------- */
 /* ------------------Form------------------- */
 
-#contact-form {width:580px}
+#contact-form {
+	width:580px;
+		/*width: 100%;*/
+	}
 #contact-form label {
 	display:block; 
 	height:44px;
 }
 #contact-form input {
-	width:548px; 
+	/*width:548px; */
+	width:95%; 
 	font-size:15px; 
 	line-height:1.2em;
 	color:#a0a0a0; 

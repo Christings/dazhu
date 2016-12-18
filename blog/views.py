@@ -143,10 +143,10 @@ class details(TemplateView):
         if blog == None:
             return HttpResponse("cant find target blog.")
             
-        blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra',
-        "markdown.extensions.nl2br",
-        'markdown.extensions.sane_lists',
-         'codehilite'])
+        # blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra',
+        # "markdown.extensions.nl2br",
+        # 'markdown.extensions.sane_lists',
+        #  'codehilite'])
         category = Category.objects.all()
 
         # if self.check_answer(blog):
@@ -198,12 +198,12 @@ class details(TemplateView):
 @csrf_protect
 def get_content(request):
     aid = request.POST["aid"]
-    answer = request.POST["answer"]
-    tools.debug("getcontent",aid,answer)
+    answer = request.POST["answer"]    
     tempblog = BlogPost.objects.get(guid=aid)
+    tools.debug("getcontent",aid,answer,tempblog.answer)
     if tempblog.answer == answer:
         return HttpResponse(tempblog.body)
-    else:
+    else:        
         return HttpResponse("error")
 
 
