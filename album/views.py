@@ -13,7 +13,8 @@ try:
     import Image
 except:
     from PIL import Image
-    
+import os
+import random
 from twisted.python.filepath import FilePath
 from django.views.generic.base import TemplateView
 import json
@@ -120,7 +121,7 @@ def ajaxGetFirst6Album(request):
         result.append({'rndName':item.rndName,'showName':item.showName,})
     
     return HttpResponse(json.dumps(result, ensure_ascii=False))
-    
+
 
 @csrf_exempt
 @secu.login_filter
@@ -144,7 +145,14 @@ def upload(request):
             fileExt = '.' + fileExt
             tools.debug("fileext is " + fileExt)
             
-        file_name = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")    
+        def convert_name_html_valid(input_name):
+            file_name = os.path.split(input_name)
+            file_name_arr = os.path.splitext(file_name[1])
+            quote_name_arr = [quote(x) for x in file_name_arr]
+            quote_name_arr[0] = "%s_%s" % (quote_name_arr[0], random.randint(1, 99))
+            return quote_name_arr
+
+        file_name = convert_name_html_valid(filename)[0]
         tools.debug("文件名",file_name)
         
         album_folder = dazhu.settings.BASE_DIR + "/dazhu/static/album/"
