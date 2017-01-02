@@ -81,7 +81,6 @@ class index(TemplateView):
     
 
 # Create your views here.
-
 class edit(TemplateView):    
     template_name = "diary/edit.html" 
     def get_context_data(self, **kwargs):

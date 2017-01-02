@@ -34,7 +34,7 @@ def upload_files(request):
 
     fileObj = request.FILES.get('editormd-image-file')
     tools.debug("upload_files fileObj {}".format(fileObj.chunks()))
-    source_filename = quote(fileObj.name.encode("utf8"))    
+    source_filename = fileObj.name.encode("utf8")  
     rnd_file_name = convert_name_html_valid(source_filename)
     tools.debug("upload_files file_name {}".format(rnd_file_name))
     try:
