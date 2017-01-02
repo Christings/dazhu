@@ -9,6 +9,6 @@ class attachment(models.Model):
     sourceName = models.CharField(max_length=150)
     rndName = models.CharField(max_length=150)
     def delete(self, using=None):
-        if os.path.isfile(settings.BASE_DIR + "/dazhu/static/upload/" + self.rndName):
-            os.remove(settings.BASE_DIR + "/dazhu/static/upload/" + self.rndName)
+        if os.path.isfile(settings.BASE_DIR + u"/dazhu/static/upload/" + self.rndName):
+            os.remove(settings.BASE_DIR + u"/dazhu/static/upload/" + self.rndName)
         models.Model.delete(self, using=using)
