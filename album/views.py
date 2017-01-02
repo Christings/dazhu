@@ -136,7 +136,7 @@ def upload(request):
     response = HttpResponse()  
     
     if fileObj: 
-        filename = quote(fileObj.name.encode("utf8"))
+        filename = fileObj.name.encode("utf8")
         fileExt = ""
         fileInfo = []
         if "." in filename:            
@@ -145,14 +145,15 @@ def upload(request):
             fileExt = '.' + fileExt
             tools.debug("fileext is " + fileExt)
             
-        def convert_name_html_valid(input_name):
+        def name_add_rndnum(input_name):
+            tools.debug("name_add_rndnum", input_name)
             file_name = os.path.split(input_name)
             file_name_arr = os.path.splitext(file_name[1])
             quote_name_arr = [x for x in file_name_arr]
             quote_name_arr[0] = "%s_%s" % (quote_name_arr[0], random.randint(1, 99))
             return quote_name_arr
 
-        file_name = convert_name_html_valid(filename)[0]
+        file_name = name_add_rndnum(filename)[0]
         tools.debug("文件名",file_name)
         
         album_folder = dazhu.settings.BASE_DIR + "/dazhu/static/album/"
