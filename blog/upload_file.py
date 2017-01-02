@@ -10,12 +10,11 @@ from models import BlogPost
 import dazhu.settings
 import account.secu as secu
 
-def convert_name_html_valid(input_name):
+def name_add_rndnum(input_name):
     file_name = os.path.split(input_name)
     file_name_arr = os.path.splitext(file_name[1])
-    quote_name_arr = [x for x in file_name_arr]
-    quote_name_arr[0] = "%s_%s" % (file_name_arr[0], random.randint(1, 99))
-    return quote_name_arr[0] + quote_name_arr[1]
+    file_name_arr[0] = "%s_%s" % (file_name_arr[0], random.randint(1, 99))
+    return file_name_arr[0] + file_name_arr[1]
 
 @csrf_exempt
 @secu.login_filter
@@ -35,7 +34,7 @@ def upload_files(request):
     fileObj = request.FILES.get('editormd-image-file')
     tools.debug("upload_files fileObj {}".format(fileObj.chunks()))
     source_filename = fileObj.name.encode("utf8")  
-    rnd_file_name = convert_name_html_valid(source_filename)
+    rnd_file_name = name_add_rndnum(source_filename)
     tools.debug("upload_files file_name {}".format(rnd_file_name))
     try:
         blog = BlogPost.objects.get(guid=aid)
