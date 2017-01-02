@@ -148,7 +148,7 @@ def upload(request):
         def convert_name_html_valid(input_name):
             file_name = os.path.split(input_name)
             file_name_arr = os.path.splitext(file_name[1])
-            quote_name_arr = [quote(x) for x in file_name_arr]
+            quote_name_arr = [x for x in file_name_arr]
             quote_name_arr[0] = "%s_%s" % (quote_name_arr[0], random.randint(1, 99))
             return quote_name_arr
 
