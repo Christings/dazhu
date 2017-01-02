@@ -13,8 +13,9 @@ import account.secu as secu
 def name_add_rndnum(input_name):
     file_name = os.path.split(input_name)
     file_name_arr = os.path.splitext(file_name[1])
-    file_name_arr[0] = "%s_%s" % (file_name_arr[0], random.randint(1, 99))
-    return file_name_arr[0] + file_name_arr[1]
+    result = list(file_name_arr)
+    result[0] = "%s_%s" % (file_name_arr[0], random.randint(1, 99))
+    return result[0] + file_name_arr[1]
 
 @csrf_exempt
 @secu.login_filter
