@@ -21,47 +21,52 @@ class result(TemplateView):
         posts_title = BlogPost.objects.filter(title__contains=keywords)
         posts_body = BlogPost.objects.filter(body__contains=keywords)
 
-        final_result_map = {}
         final_result = []
-
         class SearchItem(object):
             pass
 
-        for item in posts_title:
-            if item.guid not in final_result_map:
-                final_result_map[item.guid] = True
-                tempItem = SearchItem()
-                tempItem.guid = item.guid
-                tempItem.category = item.category
-                tempItem.title = self.GetContent(item.title,keywords)
-                tempItem.search_content = self.GetContent(item.body,keywords)
-                final_result.append(tempItem)
+        def _get_search_item(guid, category, title, body, keywords):
+            tempItem = SearchItem()
+            tempItem.guid = guid
+            tempItem.category = category
+            tempItem.title = self.GetContent(title,keywords)
+            tempItem.search_content = self.GetContent(body, keywords)
+            return tempItem
 
-        for item in posts_body:
-            if item.guid not in final_result_map:
-                final_result_map[item.guid] = True
-                tempItem = SearchItem()
-                tempItem.guid = item.guid
-                tempItem.category = item.category
-                tempItem.title = self.GetContent(item.title,keywords)
-                tempItem.search_content = self.GetContent(item.body,keywords)
-                final_result.append(tempItem)
+        title_result = [_get_search_item(
+                        x.guid, 
+                        x.category, 
+                        tools.RemoveHttpStr(x.title),
+                        tools.RemoveHttpStr(x.body),
+                        keywords) for x in posts_title]
 
+        body_result = [_get_search_item(
+                        x.guid, 
+                        x.category, 
+                        tools.RemoveHttpStr(x.title),
+                        tools.RemoveHttpStr(x.body),
+                        keywords) for x in posts_body if keywords in tools.RemoveHttpStr(x.body)]
+
+        final_result += title_result
+        final_result += body_result
+
+        no_repeat_id_map = {}
+        no_repeat_result = []
+        for item in final_result:
+            if item.guid not in no_repeat_id_map:
+                no_repeat_id_map[item.guid] = True
+                no_repeat_result.append(item)
 
         context['title'] = keywords
-        context['posts'] = final_result
+        context['posts'] = no_repeat_result
         return context
 
     def GetContent(self,input_str,keyword):
-        format_str="<span style='color:red;'>@#k</span>"
+        color_fmt="<span style='color:red;'>@#k</span>"
         content_length = 60
         tools.debug("GetContent ",input_str)
-
-        input_str = tools.RemoveHttpStr(input_str)
-        fmtkeyword = format_str.replace("@#k",keyword)
-        input_str = input_str.replace(keyword,fmtkeyword)
+        # input_str = tools.RemoveHttpStr(input_str)
         index= input_str.find(keyword)
-
         start = index - content_length
         if start < 0:
             start = 0
@@ -69,4 +74,7 @@ class result(TemplateView):
         if end > len(input_str):
             end = len(input_str)
 
-        return input_str[start:end]
+        input_str = input_str[start:end]
+        color_keyword = color_fmt.replace("@#k",keyword)
+        input_str = input_str.replace(keyword,color_keyword)
+        return input_str
