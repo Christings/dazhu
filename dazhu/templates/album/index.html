@@ -52,10 +52,10 @@
 					return;
 				}
 				if ($(document).scrollTop() >= $("#content").height()-100
-					&& maxHeight < $(document).scrollTop()) {
+				&& $(document).scrollTop() > maxHeight) {
 					//$("#info").text($(document).scrollTop()+" "+$("#content").height());
 					pages= pages + 1;
-					if($(document).scrollTop()>maxHeight){
+					if($(document).scrollTop() > maxHeight){
 						maxHeight = $(document).scrollTop();
 					}
 					wait = true;

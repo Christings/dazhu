@@ -22,7 +22,7 @@ import album
 
 
 def getAlbum(pages,is_login):
-    pageCount = 12
+    pageCount = 24
     tools.debug("islogin",is_login)
     pages = int(pages)
     
