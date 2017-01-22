@@ -16,7 +16,7 @@ from datetime import datetime
 from ip_filter.views import ip_filter
 import markdown
 
-class index(TemplateView):    
+class index(TemplateView):
     template_name = "blog/index.html"
 
     @method_decorator(ip_filter)
@@ -27,7 +27,7 @@ class index(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
         posts = BlogPost.objects.all().order_by("-timestamp")[:10]
-       
+
         result = []
 
         for item in posts:
@@ -35,9 +35,9 @@ class index(TemplateView):
             temp.commentsCount = item.comment_set.count()
             temp.body = markdown.markdown(temp.body)
             result.append(temp)
-            
-        
-        context['posts'] = result[:10]       
+
+
+        context['posts'] = result[:10]
         context['category'] = Category.objects.all()
         context['title'] = u'大猪大兔在一起'
         return context
@@ -47,28 +47,28 @@ def get_category(request):
     cate = Category.objects.all()
     for item in cate:
         result.append(item.title)
-   
+
     return HttpResponse(simplejson.dumps(result, ensure_ascii=False))
 
 
 
-class list(TemplateView):    
-    template_name = "blog/list.html" 
+class list(TemplateView):
+    template_name = "blog/list.html"
     def get_context_data(self, **kwargs):
         tools.debug("kwargs is ",kwargs)
         aid = self.args[0]
         context = super(list, self).get_context_data(**kwargs)
         pageCount = 20
-    
+
         if aid == "":
-            aid = 1    
+            aid = 1
         aid = int(aid)
-        
+
         allCounts = BlogPost.objects.count()
         allPages = allCounts // pageCount + 1
-        
+
         posts = BlogPost.objects.all().order_by("-timestamp")[(aid - 1) * pageCount:aid * pageCount]
-      
+
         finalPosts = []
         class postBlock(object):
             def __init__(self):
@@ -88,37 +88,37 @@ class list(TemplateView):
                 tempPB.items.append(item)
             else:
                 tempPB.items.append(item)
-                
+
         finalPosts.append(tempPB)
         finalPosts.pop(0)
-        
+
         category = Category.objects.all()
          #c = {'posts':finalPosts, "category":category, 'currentAid':aid, 'allPages':allPages, }
         context['posts'] = finalPosts
         context['category'] = category
         context['currentAid'] = aid
-        context['allPages'] = allPages         
+        context['allPages'] = allPages
         context['title'] = u'博客'
         return context
 
-class catelist(TemplateView):    
-    template_name = "blog/catelist.html" 
+class catelist(TemplateView):
+    template_name = "blog/catelist.html"
     def get_context_data(self, **kwargs):
         context = super(catelist, self).get_context_data(**kwargs)
-        
+
         categroyID = self.args[0]
         categroy = Category.objects.get(id=categroyID)
         posts = BlogPost.objects.filter(category=categroy.title).order_by("-timestamp")
         finalPosts = []
-   
-        for item in posts:        
+
+        for item in posts:
             finalPosts.append(item)
-            
+
         category = Category.objects.all()
-        
+
         context['posts'] = finalPosts
         context['category'] = category
-        context['title'] = categroy.title        
+        context['title'] = categroy.title
         return context
 
 
@@ -134,15 +134,15 @@ class details(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(details, self).get_context_data(**kwargs)
         guid = self.args[0]
-        
+
         try:
             blog = BlogPost.objects.get(guid=guid)
         except BlogPost.DoesNotExist:
             blog = None
-        
-        if blog == None:
+
+        if blog is None:
             return HttpResponse("cant find target blog.")
-            
+
         # blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra',
         # "markdown.extensions.nl2br",
         # 'markdown.extensions.sane_lists',
@@ -157,7 +157,7 @@ class details(TemplateView):
         context['blog'] = blog
         context['category'] = category
         context['title'] = blog.title
-        
+
         comments = blog.comment_set.all()
         context['comments'] = comments
         context['commentsCount'] = len(comments)
@@ -167,24 +167,24 @@ class details(TemplateView):
 
     @method_decorator(csrf_protect)
     def post(self, request, aid):
-        tools.debug("id is ", aid)      
-        
+        tools.debug("id is ", aid)
+
         commentUser = xss_white_list(request.POST['user'])
         message = xss_white_list(request.POST['message'])
 
-        
+
         tempComment = Comment()
         tempComment.author = commentUser
-        tools.debug("commentUser ", commentUser)      
+        tools.debug("commentUser ", commentUser)
         tempComment.body = message
-        tools.debug("message ", message)      
+        tools.debug("message ", message)
         tempComment.blog = BlogPost.objects.get(guid=aid)
-        tempComment.timestamp = timezone.now()  
-        tools.debug("timestamp ", timezone.now())            
+        tempComment.timestamp = timezone.now()
+        tools.debug("timestamp ", timezone.now())
         tempComment.save()
-        
+
         return redirect("/blog/details/"+aid)
-    
+
 #     @method_decorator(csrf_protect)
 #     def delete(self, request, id):
 #         tools.debug("delete id is ", id)
@@ -198,12 +198,12 @@ class details(TemplateView):
 @csrf_protect
 def get_content(request):
     aid = request.GET["aid"]
-    answer = request.GET["answer"]    
+    answer = request.GET["answer"]
     tempblog = BlogPost.objects.get(guid=aid)
     tools.debug("getcontent",aid,answer,tempblog.answer)
     if tempblog.answer == answer:
         return HttpResponse(tempblog.body)
-    else:        
+    else:
         return HttpResponse("error")
 
 
@@ -267,9 +267,9 @@ def download(request):
 
         response = HttpResponse(result, content_type='txt')
         response['Content-Disposition'] = 'attachment; filename=%s' % "hi.txt"
-    
+
     return response
-    
+
 
 import dazhu
 from ueditor.models import attachment
