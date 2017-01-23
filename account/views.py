@@ -19,15 +19,12 @@ class UserLogin(TemplateView):
 
         return context
 
-
-
     @method_decorator(csrf_protect)
     def post(self, request):
         url = urllib.unquote(request.GET["url"])
         if url != "":
             if request.user.check_password(request.POST['pwd']):
             	set_user_login(request)
-	    tools.debug("pwd is error",request.POST['pwd'])
+	        tools.debug("pwd is error",request.POST['pwd'])
             return redirect(url)
-
         return redirect("/")

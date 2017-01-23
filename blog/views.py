@@ -15,6 +15,8 @@ from django.shortcuts import redirect
 from datetime import datetime
 from ip_filter.views import ip_filter
 import markdown
+from django.http import Http404
+
 
 class index(TemplateView):
     template_name = "blog/index.html"
@@ -134,25 +136,18 @@ class details(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(details, self).get_context_data(**kwargs)
         guid = self.args[0]
-
+        tools.debug("blog details get_context_data guid %s" % guid)
         try:
             blog = BlogPost.objects.get(guid=guid)
         except BlogPost.DoesNotExist:
-            blog = None
-
-        if blog is None:
-            return HttpResponse("cant find target blog.")
+            tools.debug("blog details get_context_data blog %s is not found" % guid)
+            raise Http404("does not exist")
 
         # blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra',
         # "markdown.extensions.nl2br",
         # 'markdown.extensions.sane_lists',
         #  'codehilite'])
         category = Category.objects.all()
-
-        # if self.check_answer(blog):
-        #     pass
-        # else:
-        #     blog.body = "cannot open"
 
         context['blog'] = blog
         context['category'] = category
@@ -163,15 +158,18 @@ class details(TemplateView):
         context['commentsCount'] = len(comments)
         return context
 
-
-
     @method_decorator(csrf_protect)
     def post(self, request, aid):
+        '''
+        post blog comment NOT blog content
+        :param request:
+        :param aid:
+        :return this page:
+        '''
         tools.debug("id is ", aid)
 
         commentUser = xss_white_list(request.POST['user'])
         message = xss_white_list(request.POST['message'])
-
 
         tempComment = Comment()
         tempComment.author = commentUser
@@ -185,15 +183,6 @@ class details(TemplateView):
 
         return redirect("/blog/details/"+aid)
 
-#     @method_decorator(csrf_protect)
-#     def delete(self, request, id):
-#         tools.debug("delete id is ", id)
-#         try:
-#             Diary.objects.get(id=int(id)).delete()
-#         except Exception as error:
-#             tools.debug("delete method error", error)
-#             return HttpResponse("error")
-#         return HttpResponse("success")
 
 @csrf_protect
 def get_content(request):

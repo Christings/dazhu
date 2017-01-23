@@ -13,7 +13,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 APPEND_SLASH = False
 
-DOMAIN_STR = "www.yinzihao.com.cn"
+DOMAIN_STR = "www.superpig.win"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -58,7 +58,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'blog',
     'templateUtils',
-   # "channels",    
+   # "channels",
    # "chat",
     'ueditor',
     'album',

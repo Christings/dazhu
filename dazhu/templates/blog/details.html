@@ -22,7 +22,7 @@
 					<article >
 						<div class="heading">
 							<h2>
-								[{{blog.category}}]{{blog.title}}
+								{{blog.title}}
 							</h2>
 						</div>
 
@@ -42,7 +42,7 @@
 					</article>
 					<section>
 						<a id="anchor_scroll" href="#submit_reply" style="display:none">点击这里本页跳转</a>
-						<h3 id="submit_reply">评论</h3>
+						<h3 id="submit_reply">{{commentsCount}}条评论</h3>
 						{% if blog.allow_comment %}
 							<form id="contact-form" method="post">
 								{% csrf_token %}
@@ -102,7 +102,17 @@
 						<div class="content">
 							<ul>
 								{% for cate in category %}
-								<li><a href="/blog/catelist/{{cate.id}}">{{cate.title}}</a></li>
+									{% if cate.title == blog.category %}
+                                        <li>
+                                            <a href="/blog/catelist/{{cate.id}}">
+                                                <span style="color:grey;font-weight:bold;">
+                                                    {{cate.title}}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="/blog/catelist/{{cate.id}}">{{cate.title}}</a></li>
+									{% endif %}
 								{% endfor %}
 							</ul>
 						</div>

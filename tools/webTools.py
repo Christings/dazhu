@@ -13,15 +13,15 @@ import dazhu.settings as settings
 import random
 import time
 
-def GetRndStr():   
+def GetRndStr():
     rndByte = os.urandom(6)
     b64Str = base64.urlsafe_b64encode(rndByte)
     return b64Str
 
 def GetMap(input):
     return chr(input + 97)
- 
-def GetTimeCode(input=0):    
+
+def GetTimeCode(input=0):
     '''
     0 - a
     1 - b
@@ -30,7 +30,7 @@ def GetTimeCode(input=0):
     '''
     if input == 0:
         input = int(time.time())*100 + random.randint(1, 99)
- 
+
     result = ""
     while True:
         quotient = input // 26
@@ -99,27 +99,29 @@ def CutStringSafe(strIn, length):
     if length > len(strIn):
         return strIn
     else:
-        temp_length = length
-        while temp_length >=0:
-            temp_length -= 1
-            if strIn[temp_length] == '<':
-                length = temp_length
-            if strIn[temp_length] == '>':
-                break
+        result = strIn[0:length]
 
-        return strIn[0:length]
-    
+        for i in range(len(result) - 1, -1, -1):
+            if i < len(result) - 8:
+                break
+            char = result[i]
+            if char == '>':
+                break
+            if char == '<':
+                result = result[0:i]
+        return result
+
 def getHtmlPics(strHtml):
     class parseLinks(HTMLParser.HTMLParser):
         def __init__(self):
             HTMLParser.HTMLParser.__init__(self)
             self.links = []
-            
+
         def handle_starttag(self, tag, attrs):
-            if tag == 'img':        
-                for name, value in attrs:       
+            if tag == 'img':
+                for name, value in attrs:
                     if name == 'src':
-                        self.links.append(value)                        
+                        self.links.append(value)
     lParser = parseLinks()
     lParser.feed(strHtml)
     return lParser.links
@@ -146,8 +148,8 @@ def trim_string(in_str, trim_list):
 
 def readFile(filePath):
     data = None
-    try:            
-        with open(filePath, 'r') as f:  
+    try:
+        with open(filePath, 'r') as f:
             return f.read()
     except Exception as error:
         #print(error)

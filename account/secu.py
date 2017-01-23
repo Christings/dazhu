@@ -16,6 +16,7 @@ def login_filter(func):
             raise Http404
     return returned_wrapper
 
+
 def user_login(func):
     def returned_wrapper(request, *args, **kwargs):
         try:

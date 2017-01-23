@@ -1,7 +1,9 @@
 from django.conf.urls import  include, url
-
 from django.contrib import admin
+from views import get_404
 admin.autodiscover()
+
+handler404 = 'dazhu.views.get_404'
 
 urlpatterns = [
     url(r'^$', include('blog.urls')),

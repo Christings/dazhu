@@ -15,7 +15,7 @@
 							</h2>
 						</div>
 						<div class="content">
-							<img src="{{blog.body|getPic}}" style='float:left;height:178px;' width="250px" height="178px" />					
+							<img src="{{blog.body|getPic}}" style='float:left;height:178px;' width="250px" height="178px" />
 							<p style="min-height:178px;">{{blog.body|removeHtml:'700'|safe}}
 								<a href="/blog/details/{{blog.guid}}">[查看更多...]</a>
 							</p>
@@ -23,7 +23,7 @@
 						</div>
 						<div class="info">
 							<p>
-								来自 {{blog.author}} 发送于 {{blog.timestamp|date:"Y-m-d H:i"}} - <a href="#">{{blog.commentsCount}}
+								来自 {{blog.author}} 发送于 {{blog.timestamp|date:"Y-m-d H:i"}} - <a href="/blog/details/{{blog.guid}}">{{blog.commentsCount}}
 									条评论</a>
 							</p>
 						</div>
@@ -56,7 +56,7 @@
 						<div class="content">
 							<ul>
 								{% for cate in category %}
-									<li><a href="/blog/catelist/{{cate.id}}">{{cate.title}}</a></li> 
+									<li><a href="/blog/catelist/{{cate.id}}">{{cate.title}}</a></li>
 								{% endfor %}
 							</ul>
 						</div>

@@ -5,11 +5,11 @@ Created on Mar 21, 2016
 @author: yzh
 '''
 
-import tools 
-from django import template 
-register = template.Library() 
+import tools
+from django import template
+register = template.Library()
 import urllib
-@register.filter 
+@register.filter
 def removeHtml(value,length):
     value = value.replace("<br/>","#br/#")\
     .replace("\r\n","\n")\
@@ -26,28 +26,28 @@ def removeHtml(value,length):
             break
     return value
 
-@register.filter 
+@register.filter
 def quote(value):
-    try:            
+    try:
         return urllib.quote(value.encode('utf-8'))
     except:
         tools.webTools.debug("quote fail",value)
         return ""
 
-@register.filter 
+@register.filter
 def cutSafe(value, length):
     data = tools.webTools.CutStringSafe(value, int(length))
     # tools.webTools.debug("cutSafe", data)
     return data
 
-@register.filter 
+@register.filter
 def removeTags(value, tags):
     tags = tags.split(",")
     data = tools.webTools.RemoveSpecHtmlTag(value, tags)
     # tools.webTools.debug("cutSafe", data)
     return data
 
-@register.filter 
+@register.filter
 def getPic(value):
     picList = tools.webTools.getHtmlPics(value)
     if len(picList) == 0:
@@ -55,44 +55,64 @@ def getPic(value):
     else:
         for item in picList:
             if "/fileTypeImages/" not in item:
-                return item            
+                return item
         return "/static/images/img1.jpg"
-    
-    
-class GetUserNode(template.Node):  
-    def __init__(self):  
-        pass  
-  
-    def render(self, context):  
-        try:            
-            user = context['user']               
-            tools.webTools.debug("user is ",user.get_full_name())  
+
+
+class GetUserNode(template.Node):
+    def __init__(self):
+        pass
+
+    def render(self, context):
+        try:
+            user = context['user']
+            tools.webTools.debug("user is ",user.get_full_name())
             return user.get_full_name()
-        except Exception as error:   
+        except Exception as error:
             tools.webTools.debug("error is ")
             tools.webTools.debug(error)
             return u""
-  
-def GetUser(parser, token):  
-    return GetUserNode()  
-  
-register.tag('get_user', GetUser)  
 
-class GetTitleNode(template.Node):  
-    def __init__(self):  
-        pass  
-  
-    def render(self, context):  
-        try:     
-            title = context['title']             
+def GetUser(parser, token):
+    return GetUserNode()
+register.tag('get_user', GetUser)
+
+
+class GetUserEmailNode(template.Node):
+    def __init__(self):
+        pass
+
+    def render(self, context):
+        try:
+            user = context['user']
+            tools.webTools.debug("user is ",user.get_full_name())
+            return user.email
+        except Exception as error:
+            tools.webTools.debug("error is ")
+            tools.webTools.debug(error)
+            return u""
+
+def get_user_email(parser, token):
+    return GetUserEmailNode()
+
+register.tag('get_user_email', get_user_email)
+
+
+class GetTitleNode(template.Node):
+    def __init__(self):
+        pass
+
+    def render(self, context):
+        try:
+            title = context['title']
             return title
-        except Exception as error:   
+        except Exception as error:
             tools.webTools.debug("error is ",error)
             return u""
-  
-def GetTitle(parser, token):  
-    return GetTitleNode()  
-  
+
+def GetTitle(parser, token):
+    return GetTitleNode()
+
 register.tag('get_title', GetTitle)
 
 import datetime

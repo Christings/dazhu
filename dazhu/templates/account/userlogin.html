@@ -17,13 +17,10 @@
 		<div class="row block">
 			<div id="main-content" class="col-2-3">
 				<div class="wrap-col">
-					此操作需要再次验证密码
+					此操作需要再次验证<span style="color:blue">{% get_user %}</span>的密码
 					<form id="contact-form" method="post">
 						{% csrf_token %}
 						<fieldset>
-							<label>
-								<input name="user" placeholder="用户名" readonly="readonly" value="{% get_user %}" />
-							</label>
 							<label>
 								<input name="pwd" type="password" placeholder="密码" autocomplete="off"/>
 							</label>
