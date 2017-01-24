@@ -16,7 +16,12 @@
 						</div>
 						<div class="content">
 							<img src="{{blog.body|getPic}}" style='float:left;height:178px;' width="250px" height="178px" />
-							<p style="min-height:178px;">{{blog.body|removeHtml:'700'|safe}}
+							<p style="min-height:178px;">
+								{% if blog.question == "" %}
+								    {{blog.body|removeHtml:'700'|safe}}
+								{% else %}
+									这篇文章是个小秘密哦。进入回答问题才能看看看。
+								{% endif %}
 								<a href="/blog/details/{{blog.guid}}">[查看更多...]</a>
 							</p>
 							<!--{{blog.body|cutSafe:'700'| safe}}-->
