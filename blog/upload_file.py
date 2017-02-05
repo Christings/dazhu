@@ -34,7 +34,7 @@ def upload_files(request):
 
     fileObj = request.FILES.get('editormd-image-file')
     tools.debug("upload_files fileObj {}".format(fileObj.chunks()))
-    source_filename = fileObj.name.encode("utf8")  
+    source_filename = fileObj.name.encode("utf8")
     rnd_file_name = name_add_rndnum(source_filename)
     tools.debug("upload_files file_name {}".format(rnd_file_name))
     try:
@@ -46,10 +46,10 @@ def upload_files(request):
     tempAttachment = attachment()
     tempAttachment.blog = blog
     tempAttachment.sourceName = source_filename
-    tempAttachment.rndName = rnd_file_name      
+    tempAttachment.rndName = rnd_file_name
     tempAttachment.save()
 
-    upload_folder = dazhu.settings.BASE_DIR + "/dazhu/static/upload/"        
+    upload_folder = dazhu.settings.BASE_DIR + "/dazhu/static/upload/"
     if not os.path.exists(upload_folder):
         os.makedirs(upload_folder)
     file_path = str(upload_folder + rnd_file_name)
@@ -61,10 +61,10 @@ def upload_files(request):
     except Exception as errors:
         ret.message = "write file error {}".format(errors)
         return HttpResponse(ret.tojson())
-    
+
     ret.success = 1
     ret.url = "/static/upload/"+rnd_file_name
-        
+
     return HttpResponse(ret.tojson())
 
 def get_attachment(request):
@@ -72,8 +72,7 @@ def get_attachment(request):
     attachment_list = BlogPost.objects.get(guid=aid).attachment_set.all()
     ret = []
     for attachment in attachment_list:
-        ret.append({"rndName":attachment.rndName,"sourceName":attachment.sourceName})        
+        ret.append({"rndName":attachment.rndName, "sourceName":attachment.sourceName, "id":attachment.id})
     return HttpResponse(json.dumps(ret))
 
-            
-    
+

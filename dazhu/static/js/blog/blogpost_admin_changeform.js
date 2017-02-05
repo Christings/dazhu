@@ -1,6 +1,10 @@
 $(document)
 	.ready(
 		function() {
+		    $('body').on('click', '.insert_attachment', function (){
+                testEditor.insertValue("!["+$(this).prev().attr("item_name")+"]("+$(this).prev().text()+")");
+            });
+
 			$("#id_guid").attr("readonly", "readonly");
 
 			var cate_parent = $("#id_category").parent();
@@ -34,7 +38,12 @@ $(document)
 			$.getJSON("/blog/get_attachment?aid="+$("#id_guid").val(), function(json) {
 				attachment_html = "";
 				$.each(json, function(i, item) {
-					attachment_html += "<div>/static/upload/" + item.rndName + "</div>";
+					attachment_html += "<div>"+
+					"<span style='margin:10px' item_name='"+item.sourceName+"' >"+
+					    "<a target='_blank' href='/admin/ueditor/attachment/"+item.id+"/change/'>/static/upload/" + item.rndName + "</a>"+
+					"</span>"+
+					"<input type='button' class='insert_attachment' style='height:20px;padding:2px;' value='insert'/>"+
+					"</div>";
 				});
 				$("#attachment_box").html(attachment_html);
 			});
@@ -51,6 +60,8 @@ $(document)
 				imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp", "txt", "zip"],
 				imageUploadURL : "/blog/upload?aid="+$("#id_guid").val(),
 			});
+
+
 
 			// 处理ueditor
 			// var body_parent = $("#id_body").parent();
