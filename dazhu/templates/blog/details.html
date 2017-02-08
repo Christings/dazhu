@@ -53,12 +53,7 @@
 									<!--<label><input name="email" value="Email" onBlur="if(this.value=='') this.value='Email'" onFocus="if(this.value =='Email' ) this.value=''" /></label> -->
 									<label><input name="user" placeholder="用户名" class="validate[required]"/></label>
 									<!--<textarea name='message' id="id_body" style="height:100px;" class=""></textarea>-->
-									<script type="text/javascript" charset="utf-8"
-										src="/static/umeditor/umeditor.config.js"></script>
-									<!--<script type="text/javascript" charset="utf-8"
-										src="/static/umeditor/umeditor.min.js"></script>-->
-									<script type="text/javascript" charset="utf-8"
-										src="/static/umeditor/umeditor.min.js"></script>
+									
 									<script type="text/plain" name='message' id="id_body"
 											style="width:100%;height:120px;"></script>
 
@@ -126,17 +121,16 @@
 {% block script %}
 <!--<script type="text/javascript"
 		src="/static/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>-->
+
+<!--BLOCK EDITOR.MD-->
 <script src="/static/editor.md/lib/marked.min.js"></script>
 <script src="/static/editor.md/lib/prettify.min.js"></script>
-
 <script src="/static/editor.md/lib/raphael.min.js"></script>
 <script src="/static/editor.md/lib/underscore.min.js"></script>
 <script src="/static/editor.md/lib/sequence-diagram.min.js"></script>
 <script src="/static/editor.md/lib/flowchart.min.js"></script>
 <script src="/static/editor.md/lib/jquery.flowchart.min.js"></script>
-
 <script src="/static/editor.md/editormd.js"></script>
-
 <script type="text/javascript">
 	$(function(){
 		function markdown_to_html(markdown){
@@ -190,6 +184,23 @@
 			get_content("");
 		}
 
+		$("#doanswer").click(function(e){
+			get_content($("#answerstr").val());
+		});
+	});
+</script>
+<!--ENDBLOCK EDITOR.MD-->
+
+
+<!--BLOCK COMMENTS-->
+<script type="text/javascript" charset="utf-8"
+	src="/static/umeditor/umeditor.config.js"></script>
+<!--<script type="text/javascript" charset="utf-8"
+	src="/static/umeditor/umeditor.min.js"></script>-->
+<script type="text/javascript" charset="utf-8"
+	src="/static/umeditor/umeditor.min.js"></script>
+<script type="text/javascript">
+	$(function(){
 		// SyntaxHighlighter.all();
 		var form = $("#contact-form");
 		form.validationEngine();
@@ -206,10 +217,6 @@
 				, 'fontsize', 'emotion']
 		});
 
-		$("#doanswer").click(function(e){
-			get_content($("#answerstr").val());
-		});
-
 		$(".reply_cms").click(function(e){
 			var cid = $(this).attr("cid");
 			var cname = $(this).attr("cname");
@@ -220,5 +227,6 @@
 		});
 	});
 </script>
+<!--ENDBLOCK COMMENTS-->
 {% endblock %}
 
