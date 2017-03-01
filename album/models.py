@@ -13,12 +13,15 @@ class Photoes(models.Model):
     phototype = models.CharField('photo_type', choices=private_choices, max_length=10)  
     timestamp = models.DateTimeField()
     def delete(self, using=None):
-        try:
-            tools.debug("delete file ",settings.BASE_DIR + "/dazhu/static/album/normal/" + self.rndName)
-            if os.path.isfile(settings.BASE_DIR + "/dazhu/static/album/normal/" + self.rndName):
-                os.remove(settings.BASE_DIR + "/dazhu/static/album/normal/" + self.rndName)
-            if os.path.isfile(settings.BASE_DIR + "/dazhu/static/album/mini/" + self.rndName):
-                os.remove(settings.BASE_DIR + "/dazhu/static/album/mini/" + self.rndName)
-        except Exception as errors:
-            tools.debug(errors,"album-models-delete")
+        # try:
+        normal_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/normal/", self.rndName]).encode("utf-8")
+        mini_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/mini/", self.rndName]).encode("utf-8")
+        
+        tools.debug("delete file ", normal_path)
+        if os.path.isfile(normal_path):
+            os.remove(normal_path)
+        if os.path.isfile(mini_path):
+            os.remove(mini_path)
+        # except Exception as errors:
+        #     tools.debug(errors,"album-models-delete")
         models.Model.delete(self, using=using)

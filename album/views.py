@@ -19,6 +19,8 @@ from twisted.python.filepath import FilePath
 from django.views.generic.base import TemplateView
 import json
 import album
+from django.shortcuts import redirect
+import dazhu.settings as settings
 
 
 def getAlbum(pages,is_login):
@@ -184,25 +186,17 @@ def upload(request):
     
         
         if fileExt.lower() in allowExt:
-            file_path = normal_folder + file_name + "tmp" + fileExt
+            # file_path = normal_folder + file_name + "tmp" + fileExt
             mini_path = mini_folder + file_name + fileExt
             normal_path = normal_folder + file_name + fileExt
             
             try:
-                with open(file_path, 'wb+') as f:
+                with open(normal_path, 'wb+') as f:
                     for chunk in fileObj.chunks():
                         f.write(chunk)
-                #make normal pic
-                im = Image.open(file_path)
-
-                width = im.size[0]
-                height = im.size[1]
-                if width > 2048 or height > 2048:
-                    im.thumbnail((2048, 2048))
-                im.save(normal_path)
-
+                
                 # make small pic            
-                im = Image.open(file_path)
+                im = Image.open(normal_path)
                 im.thumbnail((180, 180))
 
                 #如果宽大于高
@@ -223,8 +217,13 @@ def upload(request):
 
                 im.save(mini_path)
 
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
+                #make normal pic
+                im = Image.open(normal_path)
+                width = im.size[0]
+                height = im.size[1]
+                tools.debug("upload photo ", width, height)
+                if width > 2048 or height > 2048:
+                    resizeImg(im, normal_path, 2048, 2048)
 
                 tempPhoto = Photoes()
                 tempPhoto.rndName = file_name + fileExt
@@ -234,15 +233,63 @@ def upload(request):
                 tempPhoto.save()
             except Exception as errors:
                 tools.debug("upload album error",errors)
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
                 if os.path.isfile(mini_path):
                     os.remove(mini_path)
                 if os.path.isfile(normal_path):
                     os.remove(normal_path)
 
-            
     return response
+
+def rolate_pic(request, inputName):
+    pic = Photoes.objects.get(rndName = inputName)
+    
+    normal_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/normal/", pic.rndName]).encode("utf-8")
+    im = Image.open(normal_path)
+    im.rotate(90, expand=True).save(normal_path)
+
+    mini_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/mini/", pic.rndName]).encode("utf-8")
+    im = Image.open(mini_path)
+    im.rotate(90, expand=True).save(mini_path)
+    redict_path = u"".join(["/album/show/", inputName])
+    tools.debug("rolate_pic", redict_path)
+    return redirect(redict_path)
+
+
+#等比例压缩图片  
+def resizeImg(img, output_path, dst_w=0, dst_h=0, qua=85):  
+    ''''' 
+    只给了宽或者高，或者两个都给了，然后取比例合适的 
+    如果图片比给要压缩的尺寸都要小，就不压缩了 
+    '''  
+    ori_w, ori_h = img.size  
+    widthRatio = heightRatio = None  
+    ratio = 1  
+  
+    if (ori_w and ori_w > dst_w) or (ori_h and ori_h  > dst_h):  
+        if dst_w and ori_w > dst_w:  
+            widthRatio = float(dst_w) / ori_w                                      #正确获取小数的方式  
+        if dst_h and ori_h > dst_h:  
+            heightRatio = float(dst_h) / ori_h  
+  
+        if widthRatio and heightRatio:  
+            if widthRatio < heightRatio:  
+                ratio = widthRatio  
+            else:  
+                ratio = heightRatio  
+  
+        if widthRatio and not heightRatio:  
+            ratio = widthRatio  
+  
+        if heightRatio and not widthRatio:  
+            ratio = heightRatio  
+  
+        newWidth = int(ori_w * ratio)  
+        newHeight = int(ori_h * ratio)  
+    else:  
+        newWidth = ori_w  
+        newHeight = ori_h  
+    tools.debug("resizeImg width %s height %s" % (newWidth, newHeight))
+    img.resize((newWidth,newHeight),Image.ANTIALIAS).save(output_path, quality=qua)
 
 import xml.dom.minidom as dom
 import os
