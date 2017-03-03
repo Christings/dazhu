@@ -29,8 +29,12 @@
 						{% if  user.is_authenticated %}
 								<div><a href="/admin/blog/blogpost/{{blog.guid}}/change/">edit</a></div>
 						{% endif %}
+						
+						{% if  blog.question == "" %}
+						<textarea id='hidden_content' style="display: none;">{{blog.body}}</textarea>
+						{% endif %}
 
-						<div id="blog_content" class="content">载入中，请稍后...</div>
+						<div id="blog_content" class="content"></div>
 
 						<div class="info" >
 							<p>
@@ -181,7 +185,8 @@
 								'</div>';
 			$("#blog_content").html(question_html);
 		}else{
-			get_content("");
+			// get_content("");
+			markdown_to_html($("#hidden_content").val());
 		}
 
 		$("#doanswer").click(function(e){

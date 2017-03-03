@@ -195,27 +195,8 @@ def upload(request):
                     for chunk in fileObj.chunks():
                         f.write(chunk)
                 
-                # make small pic            
-                im = Image.open(normal_path)
-                im.thumbnail((180, 180))
-
-                #如果宽大于高
-                width = im.size[0]
-                height = im.size[1]
-                if height // width > 90 // 120:
-                    #height 高了。以width为准 切height
-                    curHeight = width * 90 // 120
-                    dx = height - curHeight
-                    box = (0, dx / 2, width, curHeight + dx / 2)
-                    im = im.crop(box)
-                else:
-                    #width 大了，以height为准，切width
-                    curwidth = height * 120 // 90
-                    dx = width - curwidth
-                    box = (dx / 2, 0, curwidth + dx / 2, height)
-                    im = im.crop(box)
-
-                im.save(mini_path)
+                #make mini pic
+                make_thumbnail(normal_path, mini_path)
 
                 #make normal pic
                 im = Image.open(normal_path)
@@ -248,12 +229,34 @@ def rolate_pic(request, inputName):
     im.rotate(90, expand=True).save(normal_path)
 
     mini_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/mini/", pic.rndName]).encode("utf-8")
-    im = Image.open(mini_path)
-    im.rotate(90, expand=True).save(mini_path)
+    make_thumbnail(normal_path, mini_path)
+    
     redict_path = u"".join(["/album/show/", inputName])
     tools.debug("rolate_pic", redict_path)
     return redirect(redict_path)
 
+def make_thumbnail(normal_path, mini_path):
+    # make small pic            
+    im = Image.open(normal_path)
+    im.thumbnail((180, 180))
+
+    #如果宽大于高
+    width = im.size[0]
+    height = im.size[1]
+    if height // width > 90 // 120:
+        #height 高了。以width为准 切height
+        curHeight = width * 90 // 120
+        dx = height - curHeight
+        box = (0, dx / 2, width, curHeight + dx / 2)
+        im = im.crop(box)
+    else:
+        #width 大了，以height为准，切width
+        curwidth = height * 120 // 90
+        dx = width - curwidth
+        box = (dx / 2, 0, curwidth + dx / 2, height)
+        im = im.crop(box)
+
+    im.save(mini_path)
 
 #等比例压缩图片  
 def resizeImg(img, output_path, dst_w=0, dst_h=0, qua=85):  
