@@ -28,6 +28,7 @@ def remove_from_category(blog_posts, cates=[]):
 
     cates = [x.title for x in cates]
     will_del = []
+
     for item in blog_posts:
         try:
             if item.category not in cates:
@@ -99,6 +100,10 @@ class list(TemplateView):
         allPages = allCounts // pageCount + 1
 
         posts = BlogPost.objects.all().order_by("-timestamp")[(aid - 1) * pageCount:aid * pageCount]
+        tools.debug(type(posts))
+        if not self.request.user.is_authenticated():
+            posts = [x for x in posts]
+            posts = remove_from_category(posts)
 
         finalPosts = []
         class postBlock(object):
@@ -126,8 +131,6 @@ class list(TemplateView):
         category = Category.objects.all()
          #c = {'posts':finalPosts, "category":category, 'currentAid':aid, 'allPages':allPages, }
         context['posts'] = finalPosts
-        if not self.request.user.is_authenticated():
-            context['posts'] = remove_from_category(context['posts'])
         context['category'] = get_category_obj(self.request.user.is_authenticated())
         context['currentAid'] = aid
         context['allPages'] = allPages
