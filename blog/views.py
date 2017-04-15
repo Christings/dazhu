@@ -18,6 +18,24 @@ import markdown
 from django.http import Http404
 
 
+def remove_pri_category(blog_posts):
+    # remove privite category
+    for item in blog_posts:
+        try:
+            category = Category.objects.get(title=item.category)
+            if category.is_privite:
+                blog_posts.remove(item)
+        except:
+            pass
+    return blog_posts
+
+def get_category_obj(is_login):
+    result = Category.objects.all()
+    
+    if not is_login:
+        result = [x for x in result if not x.is_privite]
+    return result
+
 class index(TemplateView):
     template_name = "blog/index.html"
 
@@ -28,30 +46,27 @@ class index(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
+
         posts = BlogPost.objects.all().order_by("-timestamp")[:10]
-
-        result = []
-
+        result = []        
         for item in posts:
             temp = item
             temp.commentsCount = item.comment_set.count()
             temp.body = markdown.markdown(temp.body)
             result.append(temp)
 
-
         context['posts'] = result[:10]
-        context['category'] = Category.objects.all()
+        if not self.request.user.is_authenticated():
+            context['posts'] = remove_pri_category(context['posts'])
+
+        context['category'] = get_category_obj(self.request.user.is_authenticated())
         context['title'] = u'大猪大兔在一起'
         return context
 
+# ajax get category
 def get_category(request):
-    result = []
-    cate = Category.objects.all()
-    for item in cate:
-        result.append(item.title)
-
+    result =[x.title for x in get_category(request.user.is_authenticated())] 
     return HttpResponse(simplejson.dumps(result, ensure_ascii=False))
-
 
 
 class list(TemplateView):
@@ -97,7 +112,9 @@ class list(TemplateView):
         category = Category.objects.all()
          #c = {'posts':finalPosts, "category":category, 'currentAid':aid, 'allPages':allPages, }
         context['posts'] = finalPosts
-        context['category'] = category
+        if not not self.request.user.is_authenticated():
+            context['posts'] = remove_pri_category(context['posts'])
+        context['category'] = get_category_obj(self.request.user.is_authenticated())
         context['currentAid'] = aid
         context['allPages'] = allPages
         context['title'] = u'博客'
@@ -108,19 +125,18 @@ class catelist(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(catelist, self).get_context_data(**kwargs)
 
-        categroyID = self.args[0]
-        categroy = Category.objects.get(id=categroyID)
-        posts = BlogPost.objects.filter(category=categroy.title).order_by("-timestamp")
-        finalPosts = []
+        categoryID = self.args[0]
+        category = Category.objects.get(id=categoryID)
+        posts = BlogPost.objects.filter(category=category.title).order_by("-timestamp")
 
-        for item in posts:
-            finalPosts.append(item)
+        categorys = Category.objects.all()
 
-        category = Category.objects.all()
+        context['posts'] = posts
+        context['category'] = categorys
+        context['title'] = category.title
+        if category.is_privite and not self.request.user.is_authenticated():
+            context['posts'] = []
 
-        context['posts'] = finalPosts
-        context['category'] = category
-        context['title'] = categroy.title
         return context
 
 
@@ -142,12 +158,17 @@ class details(TemplateView):
         except BlogPost.DoesNotExist:
             tools.debug("blog details get_context_data blog %s is not found" % guid)
             raise Http404("does not exist")
+        
+        # check if it is privite category
+        category = Category.objects.get(title=blog.category)
+        if category.is_privite and not self.request.user.is_authenticated():
+            raise Http404("you cant feel the blog because it is in privite group")
 
         # blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra',
         # "markdown.extensions.nl2br",
         # 'markdown.extensions.sane_lists',
         #  'codehilite'])
-        category = Category.objects.all()
+        category = get_category_obj(self.request.user.is_authenticated())
 
         context['blog'] = blog
         context['category'] = category

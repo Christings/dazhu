@@ -29,6 +29,7 @@ class BlogPost(models.Model):
         
 class Category(models.Model):
     title = models.CharField(max_length=150)
+    is_privite = models.BooleanField(default=False)
     
 class Comment(models.Model):
     blog = models.ForeignKey(BlogPost)
