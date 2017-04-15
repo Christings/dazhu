@@ -65,8 +65,12 @@ class index(TemplateView):
 
 # ajax get category
 def get_category(request):
-    result =[x.title for x in get_category(request.user.is_authenticated())] 
-    return HttpResponse(simplejson.dumps(result, ensure_ascii=False))
+    try:
+        is_login = request.user.is_authenticated()
+        result =[x.title for x in get_category_obj(is_login)] 
+        return HttpResponse(simplejson.dumps(result, ensure_ascii=False))
+    except:
+        return HttpResponse()
 
 
 class list(TemplateView):
