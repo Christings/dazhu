@@ -30,7 +30,7 @@ def remove_from_category(blog_posts, cates=[]):
     will_del = []
     for item in blog_posts:
         try:
-            if item.category in cates:
+            if item.category not in cates:
                 will_del.append(item)
         except:
             pass
