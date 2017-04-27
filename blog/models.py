@@ -9,13 +9,16 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=150)
     body = models.TextField()
     category = models.CharField(max_length=150)
-    timestamp = models.DateTimeField()
-    
+    timestamp = models.DateTimeField(default = timezone.now)
+    last_update = models.DateTimeField(default = timezone.now)
     allow_comment = models.BooleanField(default=True)
     question = models.CharField(max_length=150,default="",blank=True)
     answer = models.CharField(max_length=150,default="",blank=True)
    
     def save(self, *args, **kwargs):
+        if self.guid=="":
+            self.guid = tools.GetTimeCode()
+
         if self.guid=="":
             self.guid = tools.GetTimeCode()
         #do_something()

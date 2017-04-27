@@ -8,6 +8,8 @@ import tools.webTools as tools
 from django.shortcuts import redirect
 import urllib
 from django.contrib.auth import authenticate
+import json as simplejson
+from django.http import HttpResponse
 
 class UserLogin(TemplateView):
 
@@ -28,3 +30,17 @@ class UserLogin(TemplateView):
 	        tools.debug("pwd is error",request.POST['pwd'])
             return redirect(url)
         return redirect("/")
+
+
+def get_user_info(request):
+    try:
+        user_info = [request.user.email, request.user.first_name,
+        request.user.last_name,
+        request.user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
+        request.user.is_staff]
+        tools.debug(user_info)
+        return HttpResponse(simplejson.dumps(user_info, ensure_ascii=False))
+    except:
+        return HttpResponse()
+
+    

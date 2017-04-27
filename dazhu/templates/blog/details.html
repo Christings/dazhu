@@ -38,9 +38,9 @@
 
 						<div class="info" >
 							<p>
-								来自 {{blog.author}} 写于 {{blog.timestamp|date:'Y-m-d H:i'}} -
-								<a href="#">{{commentsCount}}
-									条评论</a>
+								来自 {{blog.author}} 写于 {{blog.timestamp|date:'Y-m-d H:i'}}
+								-- 更新于{{blog.last_update|date:'Y-m-d H:i'}} -- <a href="#">{{commentsCount}}
+									条评论</a> 
 							</p>
 						</div>
 					</article>
@@ -155,7 +155,7 @@
 				flowChart       : true,  // 默认不解析
 				sequenceDiagram : true,  // 默认不解析
 			});
-		}
+			}
 
 		function get_content(answer_str){
 			$.ajax({
