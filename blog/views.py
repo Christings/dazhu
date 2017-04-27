@@ -127,7 +127,7 @@ class list(TemplateView):
          #c = {'posts':finalPosts, "category":category, 'currentAid':aid, 'allPages':allPages, }
         context['posts'] = finalPosts
         if not not self.request.user.is_authenticated():
-            context['posts'] = remove_pri_category(context['posts'])
+            context['posts'] = remove_from_category(context['posts'])
         context['category'] = get_category_obj(self.request.user.is_authenticated())
         context['currentAid'] = aid
         context['allPages'] = allPages
