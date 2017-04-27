@@ -27,12 +27,16 @@ def remove_from_category(blog_posts, cates=[]):
         return blog_posts
 
     cates = [x.title for x in cates]
+    will_del = []
     for item in blog_posts:
         try:
             if item.category in cates:
-                blog_posts.remove(item)
+                will_del.append(item)
         except:
             pass
+    for item in will_del:
+        blog_posts.remove(item)
+
     return blog_posts
 
 def get_category_obj(is_login):
