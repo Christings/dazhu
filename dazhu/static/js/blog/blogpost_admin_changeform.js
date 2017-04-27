@@ -8,7 +8,10 @@ $(document)
 			$("#id_guid").attr("readonly", "readonly");
 			$.getJSON("/account/get_user_info", function(json) {
 				username = json[1] + json[2];
-				$("#id_author").val(username);
+				if($("#id_author").val()=="")
+				{
+					$("#id_author").val(username);
+				}
 			});
 			
 			var cate_parent = $("#id_category").parent();
