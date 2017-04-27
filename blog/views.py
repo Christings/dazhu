@@ -62,10 +62,10 @@ class index(TemplateView):
             result.append(temp)
 
         context['posts'] = result[:10]
-        if not self.request.user.is_authenticated():
-            context['posts'] = remove_pri_category(context['posts'])
-
         context['category'] = get_category_obj(self.request.user.is_authenticated())
+        if not self.request.user.is_authenticated():
+            context['posts'] = remove_from_category(context['posts'], context['category'])
+
         context['title'] = u'大猪大兔在一起'
         return context
 
