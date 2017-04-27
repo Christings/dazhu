@@ -18,12 +18,18 @@ import markdown
 from django.http import Http404
 
 
-def remove_pri_category(blog_posts):
+def remove_from_category(blog_posts, cates=[]):
     # remove privite category
+    if not cates:
+        cates = get_category_obj(False)
+
+    if not cates:
+        return blog_posts
+
+    cates = [x.title for x in cates]
     for item in blog_posts:
         try:
-            category = Category.objects.get(title=item.category)
-            if category.is_privite:
+            if item.category in cates:
                 blog_posts.remove(item)
         except:
             pass
