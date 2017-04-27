@@ -58,7 +58,7 @@ class index(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
 
-        posts = BlogPost.objects.all().order_by("-timestamp")[:10]
+        posts = BlogPost.objects.all().order_by("-update_time")[:10]
         result = []        
         for item in posts:
             temp = item
@@ -99,7 +99,7 @@ class list(TemplateView):
         allCounts = BlogPost.objects.count()
         allPages = allCounts // pageCount + 1
 
-        posts = BlogPost.objects.all().order_by("-timestamp")[(aid - 1) * pageCount:aid * pageCount]
+        posts = BlogPost.objects.all().order_by("-update_time")[(aid - 1) * pageCount:aid * pageCount]
         tools.debug(type(posts))
         if not self.request.user.is_authenticated():
             posts = [x for x in posts]
@@ -144,7 +144,7 @@ class catelist(TemplateView):
 
         categoryID = self.args[0]
         category = Category.objects.get(id=categoryID)
-        posts = BlogPost.objects.filter(category=category.title).order_by("-timestamp")
+        posts = BlogPost.objects.filter(category=category.title).order_by("-update_time")
 
         categorys = Category.objects.all()
 
