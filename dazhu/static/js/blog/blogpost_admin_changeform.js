@@ -47,7 +47,8 @@ $(document)
 				$.each(json, function(i, item) {
 					attachment_html += "<div>"+
 					"<span style='margin:10px' item_name='"+item.sourceName+"' >"+
-					    "<a target='_blank' href='/admin/ueditor/attachment/"+item.id+"/change/'>/static/upload/" + item.rndName + "</a>"+
+					    "<a target='_blank' href='/admin/ueditor/attachment/"+
+						item.id+"/change/'>/static/upload/" + item.rndName + "</a>"+
 					"</span>"+
 					"<input type='button' class='insert_attachment' style='height:20px;padding:2px;' value='insert'/>"+
 					"</div>";
@@ -64,7 +65,8 @@ $(document)
 				syncScrolling : "single",
 				path    : "/static/editor.md/lib/",
 				imageUpload    : true,
-				imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp", "txt", "zip"],
+				imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp", "txt",
+				 "zip", "pdf", "doc", "docx", "xls", "xlsx", "apk", "exe"],
 				imageUploadURL : "/blog/upload?aid="+$("#id_guid").val(),
 			});
 
