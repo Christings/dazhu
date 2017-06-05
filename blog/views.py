@@ -99,8 +99,7 @@ class list(TemplateView):
         allCounts = BlogPost.objects.count()
         allPages = allCounts // pageCount + 1
 
-        posts = BlogPost.objects.all().order_by("-last_update")[(aid - 1) * pageCount:aid * pageCount]
-        tools.debug(type(posts))
+        posts = BlogPost.objects.all().order_by("-timestamp")[(aid - 1) * pageCount:aid * pageCount]
         if not self.request.user.is_authenticated():
             posts = [x for x in posts]
             posts = remove_from_category(posts)
@@ -128,7 +127,6 @@ class list(TemplateView):
         finalPosts.append(tempPB)
         finalPosts.pop(0)
 
-        category = Category.objects.all()
          #c = {'posts':finalPosts, "category":category, 'currentAid':aid, 'allPages':allPages, }
         context['posts'] = finalPosts
         context['category'] = get_category_obj(self.request.user.is_authenticated())
