@@ -38,7 +38,7 @@ def create(request):
             temp_memo.timestamp = form.cleaned_data['timestamp']
             temp_memo.author = request.user
             temp_memo.save()
-            return HttpResponseRedirect("/memo/list")
+            return HttpResponseRedirect("/memo/list/")
     else:
         form = MemoForm(initial={'timestamp': \
                                      django.utils.timezone.now()})
@@ -58,7 +58,7 @@ def edit(request, mid):
             temp_memo.timestamp = form.cleaned_data['timestamp']
             temp_memo.author = request.user
             temp_memo.save()
-            return HttpResponseRedirect('/memo/list')
+            return HttpResponseRedirect('/memo/list/')
     else:
         form = MemoForm(initial={'body': temp_memo.body.replace("<br>", "\r\n"), \
                                  'timestamp': temp_memo.timestamp, \
