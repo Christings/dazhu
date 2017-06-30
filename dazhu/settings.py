@@ -29,7 +29,7 @@ handler.setFormatter(logging.Formatter(fmt, datefmt))
 logger.addHandler(handler)
 logger.setLevel('DEBUG')
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 DOMAIN_STR = "www.superpig.win"
 
 # Quick-start development settings - unsuitable for production
