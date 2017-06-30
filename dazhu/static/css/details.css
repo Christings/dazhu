@@ -3,11 +3,13 @@
     padding: 3px;
     background-color: #ffffcc;
     white-space:normal;
-    border-radius:10px;
+    border-radius:5px;
+    border:lightgrey solid 1px;
     -moz-border-radius:10px; /* Old Firefox */
+    margin-bottom: 5px;
 }
 
-.codehilite span{word-break: normal;word-wrap:break-word; white-space:normal;}
+.codehilite span{word-break: break-all;word-wrap:break-word; white-space:normal;}
 
 #blog_content h1{
 	padding-bottom: 0.3em;

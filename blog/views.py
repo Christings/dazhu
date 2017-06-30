@@ -3,8 +3,6 @@ from django.http import HttpResponse
 from models import BlogPost, Category,Comment
 import tools.webTools as tools
 import json as simplejson
-
-import urllib
 from django.views.generic.base import TemplateView
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -127,7 +125,6 @@ class list(TemplateView):
         finalPosts.append(tempPB)
         finalPosts.pop(0)
 
-         #c = {'posts':finalPosts, "category":category, 'currentAid':aid, 'allPages':allPages, }
         context['posts'] = finalPosts
         context['category'] = get_category_obj(self.request.user.is_authenticated())
         context['currentAid'] = aid
@@ -156,13 +153,6 @@ class catelist(TemplateView):
 
 
 class details(TemplateView):
-    def check_answer(self, blog):
-        if blog.question == "":
-            return True
-        else:
-            return False
-        return True
-
     template_name = "blog/details.html"
     def get_context_data(self, **kwargs):
         context = super(details, self).get_context_data(**kwargs)
@@ -179,10 +169,10 @@ class details(TemplateView):
         if category.is_privite and not self.request.user.is_authenticated():
             raise Http404("you cant feel the blog because it is in privite group")
 
-        # blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra',
-        # "markdown.extensions.nl2br",
-        # 'markdown.extensions.sane_lists',
-        #  'codehilite'])
+        blog.body = markdown.markdown(blog.body, extensions=['markdown.extensions.extra',
+        "markdown.extensions.nl2br",
+        'markdown.extensions.sane_lists',
+         'codehilite'])
         category = get_category_obj(self.request.user.is_authenticated())
 
         context['blog'] = blog
@@ -227,6 +217,10 @@ def get_content(request):
     tempblog = BlogPost.objects.get(guid=aid)
     tools.debug("getcontent",aid,answer,tempblog.answer)
     if tempblog.answer == answer:
+        tempblog.body = markdown.markdown(tempblog.body, extensions=['markdown.extensions.extra',
+                                                                     "markdown.extensions.nl2br",
+                                                                     'markdown.extensions.sane_lists',
+                                                                     'codehilite'])
         return HttpResponse(tempblog.body)
     else:
         return HttpResponse("error")

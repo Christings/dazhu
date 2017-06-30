@@ -3,15 +3,11 @@
 <div></div>
 {% block head %}
 	<link rel="stylesheet" href="/static/css/validationEngine.jquery.css">
-	<!--<link href="/static/ueditor/third-party/SyntaxHighlighter/shCoreEclipse.css"
-			rel="stylesheet" type="text/css" media="all" />-->
 	<link href="/static/umeditor/themes/default/css/umeditor.min.css"
 		type="text/css" rel="stylesheet">
-	<!--<link href="/static/css/codehilite_colorful.css"
-		type="text/css" rel="stylesheet">-->
+	<link href="/static/css/code_css/git_hub.css"
+		type="text/css" rel="stylesheet">
 	<link rel="stylesheet" href="/static/css/details.css" />
-
-	<link rel="stylesheet" href="/static/editor.md/css/editormd.preview.css" />
 {% endblock %}
 {% block content %}
 <section id="content">
@@ -29,12 +25,12 @@
 						{% if  user.is_authenticated %}
 								<div><a href="/admin/blog/blogpost/{{blog.guid}}/change/">edit</a></div>
 						{% endif %}
-						
-						{% if  blog.question == "" %}
-						<textarea id='hidden_content' style="display: none;">{{blog.body}}</textarea>
-						{% endif %}
 
-						<div id="blog_content" class="content"></div>
+                        {% if  blog.question == "" %}
+						    <div id="blog_content" class="content">{{blog.body|safe}}</div>
+                            {% else %}
+                            <div id="blog_content" class="content"></div>
+                        {% endif %}
 
 						<div class="info" >
 							<p>
@@ -123,40 +119,9 @@
 </section>
 {% endblock %}
 {% block script %}
-<!--<script type="text/javascript"
-		src="/static/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>-->
-
-<!--BLOCK EDITOR.MD-->
-<script src="/static/editor.md/lib/marked.min.js"></script>
-<script src="/static/editor.md/lib/prettify.min.js"></script>
-<script src="/static/editor.md/lib/raphael.min.js"></script>
-<script src="/static/editor.md/lib/underscore.min.js"></script>
-<script src="/static/editor.md/lib/sequence-diagram.min.js"></script>
-<script src="/static/editor.md/lib/flowchart.min.js"></script>
-<script src="/static/editor.md/lib/jquery.flowchart.min.js"></script>
-<script src="/static/editor.md/editormd.js"></script>
+<!--BLOCK GETCONTENT-->
 <script type="text/javascript">
 	$(function(){
-		function markdown_to_html(markdown){
-			$("#blog_content").html("");
-			testEditormdView = editormd.markdownToHTML("blog_content", {
-				markdown        : markdown ,//+ "\r\n" + $("#append-test").text(),
-				//htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
-				htmlDecode      : "style,script,iframe",  // you can filter tags decode
-				//toc             : false,
-				tocm            : true,    // Using [TOCM]
-				//tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
-				//gfm             : false,
-				//tocDropdown     : true,
-				// markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
-				emoji           : true,
-				taskList        : true,
-				tex             : true,  // 默认不解析
-				flowChart       : true,  // 默认不解析
-				sequenceDiagram : true,  // 默认不解析
-			});
-			}
-
 		function get_content(answer_str){
 			$.ajax({
 				type: 'get',
@@ -170,7 +135,7 @@
 						alert("答案错误!");
 						return;
 					}
-					markdown_to_html(data);
+					$("#blog_content").html(data);
 				}
 			});
 		}
@@ -184,9 +149,6 @@
 									'<input style="border:1px solid black;" id="doanswer" type="button" value="回答"/>' +
 								'</div>';
 			$("#blog_content").html(question_html);
-		}else{
-			// get_content("");
-			markdown_to_html($("#hidden_content").val());
 		}
 
 		$("#doanswer").click(function(e){
@@ -194,14 +156,12 @@
 		});
 	});
 </script>
-<!--ENDBLOCK EDITOR.MD-->
+<!--ENDBLOCK GETCONTENT-->
 
 
 <!--BLOCK COMMENTS-->
 <script type="text/javascript" charset="utf-8"
 	src="/static/umeditor/umeditor.config.js"></script>
-<!--<script type="text/javascript" charset="utf-8"
-	src="/static/umeditor/umeditor.min.js"></script>-->
 <script type="text/javascript" charset="utf-8"
 	src="/static/umeditor/umeditor.min.js"></script>
 <script type="text/javascript">
