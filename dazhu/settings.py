@@ -10,9 +10,26 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-APPEND_SLASH = False
+import logging
+import logging.handlers
 
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+fmt = '%(asctime)s %(levelname)s %(message)s'
+datefmt='%Y-%m-%d %H:%M:%S'
+logger = logging.getLogger()
+# file_handler = logging.handlers.TimedRotatingFileHandler(
+#             filename = BASE_DIR+'/logs/dazhu.log',
+#             when = "midnight",
+#             backupCount = 5)
+# file_handler.setFormatter(logging.Formatter(fmt, datefmt))
+# logger.addHandler(file_handler)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter(fmt, datefmt))
+logger.addHandler(handler)
+logger.setLevel('DEBUG')
+
+APPEND_SLASH = False
 DOMAIN_STR = "www.superpig.win"
 
 # Quick-start development settings - unsuitable for production
@@ -28,24 +45,7 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR+'/debug.log',
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
+LOGGING_CONFIG = None
 
 # Application definition
 

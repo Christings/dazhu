@@ -4,7 +4,7 @@ Created on Mar 12, 2016
 @author: yzh
 '''
 # coding: utf-8
-
+import logging
 import os
 import base64
 import re
@@ -167,4 +167,9 @@ def ExtractData(regex, content):
 isdebug = settings.DEBUG
 def debug(*obj):
     if isdebug:
-        print(obj)
+        if len(obj) == 1:
+            logging.debug("{}".format(obj))
+        pattern = ""
+        for i in range(0, len(obj)):
+            pattern += u"{} "
+        logging.debug(pattern.format(*obj))

@@ -66,7 +66,7 @@ class GetUserNode(template.Node):
     def render(self, context):
         try:
             user = context['user']
-            tools.webTools.debug("user is ",user.get_full_name())
+            tools.webTools.debug("user is ", user.get_full_name())
             return user.get_full_name()
         except Exception as error:
             tools.webTools.debug("error is ")
