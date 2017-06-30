@@ -167,9 +167,12 @@ def ExtractData(regex, content):
 isdebug = settings.DEBUG
 def debug(*obj):
     if isdebug:
-        if len(obj) == 1:
-            logging.debug("{}".format(obj))
-        pattern = ""
-        for i in range(0, len(obj)):
-            pattern += u"{} "
-        logging.debug(pattern.format(*obj))
+        try:
+            if len(obj) == 1:
+                logging.debug("{}".format(obj))
+            pattern = ""
+            for i in range(0, len(obj)):
+                pattern += u"{} "
+            logging.debug(pattern.format(*obj))
+        except:
+            print("debug func error, data print", obj)
