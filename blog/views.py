@@ -14,6 +14,7 @@ from datetime import datetime
 from ip_filter.views import ip_filter
 import markdown
 from django.http import Http404
+from msg.models import send_msg
 
 
 def remove_from_category(blog_posts, cates=[]):
@@ -206,6 +207,7 @@ class details(TemplateView):
         tempComment.timestamp = timezone.now()
         tools.debug("timestamp ", timezone.now())
         tempComment.save()
+        send_msg(rid=0,sid=0,title=u"新的博客评论",content=u"标题：{} <a href='/blog/details/{}'>链接</a>".format(tempComment.blog.title, tempComment.blog.guid))
 
         return redirect("/blog/details/"+aid)
 

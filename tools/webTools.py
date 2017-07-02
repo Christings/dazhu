@@ -12,6 +12,7 @@ import HTMLParser
 import dazhu.settings as settings
 import random
 import time
+import datetime
 
 def GetRndStr():
     rndByte = os.urandom(6)
@@ -44,6 +45,11 @@ def GetTimeCode(input=0):
             break
     return result
 
+def get_utc_timestamp():
+    d = datetime.datetime.utcnow()
+    epoch = datetime.datetime(1970,1,1)
+    t = (d - epoch).total_seconds()
+    return t
 
 
 def RemoveHttpStr(val):

@@ -70,6 +70,7 @@ INSTALLED_APPS = (
     'message',
     "ip_filter",
     "memo",
+    'msg'
 )
 
 MIDDLEWARE_CLASSES = (

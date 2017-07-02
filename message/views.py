@@ -11,6 +11,7 @@ from datetime import datetime
 from django.views.generic.base import TemplateView
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import redirect
+from msg.models import send_msg
 
 def recover(request):
     xmldoc = dom.parse(dazhu.settings.BASE_DIR +'/message.xml')
@@ -81,6 +82,8 @@ class list(TemplateView):
         insert_message.author = commentUser
         insert_message.timestamp = datetime.now()
         insert_message.save()
+
+        send_msg(rid=0,sid=0,title=u"新的留言",content=u"内容：{}".format(message))
 
         return redirect("/message/")
 

@@ -63,7 +63,7 @@
                         <!-- 					<li><a href="#" title="youtube"><img  src="/static/images/socials/youtube-32x32.png"/></a></li> -->
 
                         {% if user.is_authenticated %}
-                        <li>欢迎:<a href="/admin/">{% get_user %}</a></li>
+                        <li>欢迎:<a href="/admin/">{% get_user %}</a>&nbsp;<a href="/msg/"><img src="/static/images/mail.png" width="18"/> {% get_msg_count %}</a></li>
                         {% else %}
                         <li><a href="/admin/">登录</a></li>
                         {% endif %}

@@ -15,7 +15,6 @@ except:
     from PIL import Image
 import os
 import random
-from twisted.python.filepath import FilePath
 from django.views.generic.base import TemplateView
 import json
 import album

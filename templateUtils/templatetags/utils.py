@@ -120,3 +120,8 @@ def get_time():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 register.simple_tag(get_time)
+
+from msg.models import get_msg
+def get_msg_count():
+    return len(get_msg())
+register.simple_tag(get_msg_count)
