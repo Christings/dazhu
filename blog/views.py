@@ -51,7 +51,6 @@ class index(TemplateView):
     template_name = "blog/index.html"
 
     @method_decorator(ip_filter)
-    @method_decorator(cache_page(60 * 60))
     def get(self, request, *args, **kwargs):
         return TemplateView.get(self, request, *args, **kwargs)
 
