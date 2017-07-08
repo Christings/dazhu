@@ -180,6 +180,7 @@ class details(TemplateView):
         context['blog'] = blog
         context['category'] = category
         context['title'] = blog.title
+        context['description'] = blog.body
 
         comments = blog.comment_set.all()
         context['comments'] = comments

@@ -115,6 +115,25 @@ def GetTitle(parser, token):
 
 register.tag('get_title', GetTitle)
 
+
+class GetDespNode(template.Node):
+    def __init__(self):
+        pass
+
+    def render(self, context):
+        try:
+            desp = context['description']
+            desp = tools.webTools.RemoveHttpStr(desp)
+            desp = tools.webTools.CutStringSafe(desp,150)
+            return desp
+        except Exception as error:
+            return u"这是大猪和大兔子的个人网站，用来做笔记。大猪是一个程序员。喜欢python，go，c#和大兔子。"
+
+def get_description(parser, token):
+    return GetDespNode()
+
+register.tag('get_description', get_description)
+
 import datetime
 def get_time():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
