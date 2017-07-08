@@ -15,6 +15,7 @@ from ip_filter.views import ip_filter
 import markdown
 from django.http import Http404
 from msg.models import send_msg
+from django.views.decorators.cache import cache_page
 
 
 def remove_from_category(blog_posts, cates=[]):
@@ -50,6 +51,7 @@ class index(TemplateView):
     template_name = "blog/index.html"
 
     @method_decorator(ip_filter)
+    @method_decorator(cache_page(60 * 60))
     def get(self, request, *args, **kwargs):
         return TemplateView.get(self, request, *args, **kwargs)
 
