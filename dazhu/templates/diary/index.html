@@ -7,7 +7,14 @@
 		<div class="row block">
 			<div id="main-content" class="col-2-3">
 				<div style="padding-left: 10px;">
-					<a href="/diary/edit/0">post a new</a> <a href="/diary/download/">download</a>
+					<a href="/diary/edit/0">写一篇</a>
+                    <a href="/diary/download/">导出</a>
+                    {% if is_desc == True %}
+                        <a href="/diary/?is_desc=False">按时间正序</a>
+                    {% else %}
+                        <a href="/diary/?is_desc=True">按时间倒序</a>
+                    {% endif %}
+
 				</div>
 				<div id='diaries' class="wrap-col"></div>
 			</div>
@@ -39,14 +46,19 @@
 		});
 
 		function getJs() {
-			$.getJSON("/diary/get_post/" + pages, function(json) {
+		    diary_url = "/diary/get_post/" + pages+"?is_desc={{ is_desc }}";
+			$.getJSON(diary_url, function(json) {
 				$.each(json, function(i, item) {
 					var tempText =
 					'<article style="padding:0;">' +
 					'<div class="heading" style="padding-bottom:5px;">' +
 					'<h5>' +
 					item.timestamp + " " + item.weather + " " + item.weekday +
-					'<a style="padding-left:5px;" href="/diary/edit/'+ item.id  +'/">edit</a>'
+					'<a style="padding-left:5px;" href="/diary/edit/'+
+                            item.id + '/">'+
+                            '<img src="/static/images/edit.png" '+
+                            ' width="20px" height="20px" style="padding:0;border:0;"/>'+
+                            '</a>'
 							+
 							'</h5>' +
 							'</div>' +

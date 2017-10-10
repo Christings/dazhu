@@ -21,7 +21,8 @@ def weekday(input):
     weekday_arr = [u"星期一", u"星期二", u"星期三", u"星期四", u"星期五", u"星期六", u"星期日", ]
     return weekday_arr[input]
 
-def getDiary(pages,user):
+
+def getDiary(pages, user, is_desc=True):
     pageCount = 12  
     pages = int(pages)   
 
@@ -29,9 +30,15 @@ def getDiary(pages,user):
     allPages = allCounts // pageCount + 1
     posts = None
             
-    if True:
-        posts = user.diary_set.all().order_by("-timestamp")[(pages - 1) * pageCount:pages * pageCount]
-    
+    if is_desc:
+        posts = user.diary_set.all().\
+                    order_by("-timestamp")\
+            [(pages - 1) * pageCount:pages * pageCount]
+    else:
+        posts = user.diary_set.all(). \
+                    order_by("timestamp") \
+            [(pages - 1) * pageCount:pages * pageCount]
+
     return posts, allPages
 
 
@@ -43,7 +50,13 @@ def ajaxDiary(request, pages):
     except:
         pages = 1
 
-    pagesInfo = getDiary(pages,request.user)
+    try:
+        is_desc = request.GET["is_desc"]
+        is_desc = False if is_desc.lower() in ['false', '0'] else True
+    except:
+        is_desc = True
+
+    pagesInfo = getDiary(pages, request.user, is_desc)
     posts = pagesInfo[0]
     allpages = pagesInfo[1]
 
@@ -66,9 +79,17 @@ def ajaxDiary(request, pages):
 class index(TemplateView):    
     template_name = "diary/index.html" 
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
         context['title'] = u'日记'
+        if 'is_desc' in self.request.GET:
+            is_desc = self.request.GET['is_desc']
+            is_desc = False if is_desc.lower() in ['false', '0'] else True
+        else:
+            is_desc = True
+
+        context['is_desc'] = is_desc
+        tools.debug("is_desc", is_desc)
         return context
     
     @method_decorator(login_filter)
@@ -76,9 +97,6 @@ class index(TemplateView):
     def get(self, request, *args, **kwargs):
         return TemplateView.get(self, request, *args, **kwargs)
 
-    
-
-    
 
 # Create your views here.
 class edit(TemplateView):    
