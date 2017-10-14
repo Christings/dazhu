@@ -4,27 +4,45 @@ from django.http import HttpResponse, StreamingHttpResponse
 import logging
 import os
 from album.models import Photoes
+from django.views.decorators.http import condition, last_modified
+import time
+import datetime
 
 
-def handler_statics(request, path):
-    true_file_path = u"{}/dazhu/static/{}".format(os.getcwd(), path)
-    logging.info(u"handler_statics true_file_path {}".format(true_file_path))
-    if true_file_path.endswith("/"):
-        true_file_path = true_file_path[:-1]
+def get_real_path(request, path):
+    real_file_path = u"{}/dazhu/static/{}".format(os.getcwd(), path)
+    if real_file_path.endswith("/"):
+        real_file_path = real_file_path[:-1]
 
-    short_file_name = true_file_path.split("/")
+    short_file_name = real_file_path.split("/")
     short_file_name = short_file_name[len(short_file_name)-1]
 
     # 对 album 要鉴权
     if "album/" in path:
-        true_file_path = handler_album(request, short_file_name, true_file_path)
+        real_file_path = handler_album(request, short_file_name, real_file_path)
+    return short_file_name, real_file_path
+
+
+def get_file_create_time(request, path):
+    try:
+        _, real_file_path = get_real_path(request, path)
+        mtime = time.ctime(os.path.getmtime(real_file_path))
+        logging.info("last modified: {}".format(mtime))
+        return datetime.datetime.strptime(mtime, "%a %b %d %H:%M:%S %Y")
+    except:
+        return datetime.datetime.now()
+
+
+@last_modified(get_file_create_time)
+def handler_statics(request, path):
+    short_file_name, real_file_path = get_real_path(request, path)
     
-    response = HttpResponse(readFile(true_file_path))
+    response = StreamingHttpResponse(readFile(real_file_path))
     response['Content-Type'] = get_right_content_type(short_file_name)
     response['Content-Disposition'] = get_right_content_disposition(short_file_name)
 
     logging.info(u"handler_statics type {} path {}".format(get_right_content_type(short_file_name)
-                                                           , true_file_path))
+                                                           , real_file_path))
     return response
 
 
