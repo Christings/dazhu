@@ -55,7 +55,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles',
     'blog',
     'templateUtils',
    # "channels",
@@ -70,7 +70,8 @@ INSTALLED_APPS = (
     'message',
     "ip_filter",
     "memo",
-    'msg'
+    'msg',
+    'handler_statics'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -147,8 +148,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = "/dazhu/dazhu/static/"
 
-STATIC_ROOT = "/root/dazhu/dazhu/static/"
 STATICFILES_FINDERS = (
 'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 'django.contrib.staticfiles.finders.FileSystemFinder',

@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^memo/', include('memo.urls')),
     url(r'^pan/', include('pan.urls')),
     url(r'^msg/', include('msg.urls')),
+    url(r'^static/', include('handler_statics.urls')),
     url(r'^(.*)/(.*)/', include('cms.urls')),
 
 ]
