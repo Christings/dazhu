@@ -12,6 +12,7 @@
 							<a href="/admin/album/photoes/{{pic.id}}/change/">编辑</a>
 							<a href="#">{{pic.phototype}}</a>
 							<a href="/album/rolate/{{pic.rndName}}">旋转</a>
+							<div id='url_text_warp'><textarea style="border:1px solid" id='url_text'></textarea></div>
 							<a id='get_pic_url' type="button" /> 
 								获取图片链接
 							</a>
@@ -79,21 +80,32 @@
 		// 		$("#pic").attr("width",contentWidth);
 		// 	}
 		// });
+		$("#url_text_warp").hide();
 		$("#get_pic_url").click(function () {
 			hostName = window.location.host;
 			url = hostName + '/album/show/{{pic.rndName}}?token={{real_token}}';
 
-        	transfer = document.createElement('textarea');
-            transfer.id = 'J_CopyTransfer';
-            transfer.style.position = 'absolute';
-            transfer.style.left = '-9999px';
-            transfer.style.top = '-9999px';
-            document.body.appendChild(transfer);
+			var u = navigator.userAgent;
+			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			if (isiOS){
+				$("#url_text_warp").show();
+				$("#url_text").val(url);
+				
+			}else{
+				transfer = document.createElement('textarea');
+				transfer.id = 'J_CopyTransfer';
+				transfer.style.position = 'absolute';
+				transfer.style.left = '-9999px';
+				transfer.style.top = '-9999px';
+				document.body.appendChild(transfer);
 
-			transfer.value = url;
-			transfer.focus();
-			transfer.select();
-			document.execCommand('Copy', false, null);
+				transfer.value = url;
+				transfer.focus();
+				transfer.select();
+				document.execCommand('Copy');
+				alert('已复制剪贴板');
+			}
 		});
 	});
 
