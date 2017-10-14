@@ -20,6 +20,8 @@ import json
 import album
 from django.shortcuts import redirect
 import dazhu.settings as settings
+import logging
+from album.get_md5_token import get_token
 
 
 def getAlbum(pages,is_login):
@@ -65,20 +67,30 @@ class show(TemplateView):
             pass
         pic = Photoes.objects.get(rndName = inputName)
 
+        token = ""
+        if 'token' in self.request.GET:
+            token = self.request.GET['token']
+            logging.info("show token {}".format(token))
+
         context['pic'] = pic
         context['title'] = pic.showName
         next = Photoes()
         next.rndName = "nomore"
         next.showName = "no more..."
+
         try:
+            real_token = ""
             if self.request.user.is_authenticated():
                 next = Photoes.objects.filter(timestamp__lt=pic.timestamp).order_by("-timestamp")[0]
+                real_token = get_token(inputName)
             else:
                 next = Photoes.objects.filter(phototype='public').filter(timestamp__lt=pic.timestamp).order_by("-timestamp")[0]
         except Exception as error:
             tools.debug("next find fail",error)
             pass
         context['next']=next
+        context['token']=token
+        context['real_token']=real_token
         return context
 
 def ajaxGetAlbum(request,pages):

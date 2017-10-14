@@ -3,10 +3,10 @@ from django.shortcuts import render
 from django.http import HttpResponse, StreamingHttpResponse
 import logging
 import os
-from album.models import Photoes
 from django.views.decorators.http import condition, last_modified
 import time
 import datetime
+from handler_statics.handler_album import handler_album
 
 
 def get_real_path(request, path):
@@ -23,7 +23,7 @@ def get_real_path(request, path):
     return short_file_name, real_file_path
 
 
-def get_file_create_time(request, path):
+def get_file_m_time(request, path):
     try:
         _, real_file_path = get_real_path(request, path)
         mtime = time.ctime(os.path.getmtime(real_file_path))
@@ -33,7 +33,7 @@ def get_file_create_time(request, path):
         return datetime.datetime.now()
 
 
-@last_modified(get_file_create_time)
+@last_modified(get_file_m_time)
 def handler_statics(request, path):
     short_file_name, real_file_path = get_real_path(request, path)
     
@@ -41,18 +41,8 @@ def handler_statics(request, path):
     response['Content-Type'] = get_right_content_type(short_file_name)
     response['Content-Disposition'] = get_right_content_disposition(short_file_name)
 
-    logging.info(u"handler_statics type {} path {}".format(get_right_content_type(short_file_name)
-                                                           , real_file_path))
+    logging.info(u"handler_statics type {} path {}".format(get_right_content_type(short_file_name), real_file_path))
     return response
-
-
-# 相册要鉴权
-def handler_album(request, short_name, file_path):
-    pic = Photoes.objects.get(rndName = short_name)
-    if pic.phototype == "private":
-        if not request.user.is_authenticated():
-            file_path = u"{}/dazhu/static/{}".format(os.getcwd(), u'/images/dazhu.jpg')
-    return file_path
 
 
 def get_right_content_disposition(filename):

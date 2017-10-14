@@ -7,12 +7,15 @@
 			<div id="main-content" class="col-2-3">
 				<div class="wrap-col">
 					<article>
-						{% if  user.is_authenticated %}
-								<div>
-									<a href="/admin/album/photoes/{{pic.id}}/change/">编辑</a>
-									<a href="#">{{pic.phototype}}</a>
-									<a href="/album/rolate/{{pic.rndName}}">旋转</a>
-								</div>
+						{% if user.is_authenticated %}
+						<div>
+							<a href="/admin/album/photoes/{{pic.id}}/change/">编辑</a>
+							<a href="#">{{pic.phototype}}</a>
+							<a href="/album/rolate/{{pic.rndName}}">旋转</a>
+							<a id='get_pic_url' type="button" /> 
+								获取图片链接
+							</a>
+						</div>
 						{% endif %}
 						<div class="heading">
 							<h2>
@@ -20,8 +23,9 @@
 							</h2>
 						</div>
 						<div class="content">
-							<img id='pic' src="/static/album/normal/{{pic.rndName}}"
-								title='{{pic.showName}}' />
+							{% if token %}
+							<img id='pic' src="/static/album/normal/{{pic.rndName}}?token={{token}}" title='{{pic.showName}}' /> {% else %}
+							<img id='pic' src="/static/album/normal/{{pic.rndName}}" title='{{pic.showName}}' /> {% endif %}
 						</div>
 						<div class="info">
 							<p>上传于 {{pic.timestamp|date:"Y-m-d H:i"}}</p>
@@ -36,46 +40,62 @@
 							<h2>下一张 {{next.showName}}</h2>
 						</div>
 						<div class="content">
-						{% if not next.rndName == "nomore" %}
-						  <a href="/album/show/{{next.rndName}}">
+							{% if not next.rndName == "nomore" %}
+							<a href="/album/show/{{next.rndName}}">
 								<img src="/static/album/mini/{{next.rndName}}" style="border: 0px;width:100px;height:90px;" />
-						  </a>
-						{% endif %}
-							
-							
+						  </a> {% endif %}
+
+
 						</div>
 					</div>
 				</div>
 			</div>
-		
-		</div>		
+
+		</div>
 	</div>
-	
+
 </section>
 <script type="text/javascript">
-// 	$(function() {
-// 		$("<img/>").attr("src", $("#pic").attr("src")).load(function() {
-// 			/*
-// 			  如果要获取图片的真实的宽度和高度有三点必须注意
-// 			  1、需要创建一个image对象：如这里的$("<img/>")
-// 			  2、指定图片的src路径
-// 			  3、一定要在图片加载完成后执行如.load()函数里执行
-// 			 */
-// 			realWidth = this.width;
-// 			realHeight = this.height;
-// 			alert(realWidth);
-// 			//            //如果真实的宽度大于浏览器的宽度就按照100%显示
-// 			//             if(realWidth>=_winwh ){
-// 			//                    $(img).css("width","100%").css("height","auto");
-// 			//                 }
-// 			//                 else{//如果小于浏览器的宽度按照原尺寸显示
-// 			//                   $(img).css("width",realWidth+'px').css("height",realHeight+'px');
-// 			//                 }
-// 			var contentWidth = $("#main-content").width();
-// 			if (realWidth > contentWidth) {
-// 				$("#pic").attr("width",contentWidth);
-// 			}
-// 		});
-// 	});
+	$(function () {
+		// $("<img/>").attr("src", $("#pic").attr("src")).load(function() {
+		// 	/*
+		// 	  如果要获取图片的真实的宽度和高度有三点必须注意
+		// 	  1、需要创建一个image对象：如这里的$("<img/>")
+		// 	  2、指定图片的src路径
+		// 	  3、一定要在图片加载完成后执行如.load()函数里执行
+		// 	 */
+		// 	realWidth = this.width;
+		// 	realHeight = this.height;
+		// 	alert(realWidth);
+		// 	//            //如果真实的宽度大于浏览器的宽度就按照100%显示
+		// 	//             if(realWidth>=_winwh ){
+		// 	//                    $(img).css("width","100%").css("height","auto");
+		// 	//                 }
+		// 	//                 else{//如果小于浏览器的宽度按照原尺寸显示
+		// 	//                   $(img).css("width",realWidth+'px').css("height",realHeight+'px');
+		// 	//                 }
+		// 	var contentWidth = $("#main-content").width();
+		// 	if (realWidth > contentWidth) {
+		// 		$("#pic").attr("width",contentWidth);
+		// 	}
+		// });
+		$("#get_pic_url").click(function () {
+			hostName = window.location.host;
+			url = hostName + '/album/show/{{pic.rndName}}?token={{real_token}}';
+
+        	transfer = document.createElement('textarea');
+            transfer.id = 'J_CopyTransfer';
+            transfer.style.position = 'absolute';
+            transfer.style.left = '-9999px';
+            transfer.style.top = '-9999px';
+            document.body.appendChild(transfer);
+
+			transfer.value = url;
+			transfer.focus();
+			transfer.select();
+			document.execCommand('Copy', false, null);
+		});
+	});
+
 </script>
 {% endblock %}

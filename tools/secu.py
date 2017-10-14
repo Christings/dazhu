@@ -3,6 +3,15 @@ import tools.webTools as tools
 from django.http import Http404
 import re
 from dazhu.settings import DOMAIN_STR
+from dazhu.settings import SECRET_KEY
+import hashlib
+
+
+def get_str_md5(input_str):
+    md5obj = hashlib.md5()
+    md5obj.update(input_str)
+    return md5obj.hexdigest()
+
 
 def decodeHtml(input):
     s = input
@@ -63,3 +72,11 @@ def xss_white_list(input):
                 s = s.replace(safe_str[0],decodeHtml(safe_str[0]));
 
     return s
+
+
+def get_secu_key(input_str):
+    return get_str_md5(SECRET_KEY + input_str)
+
+
+def check_secu_key(input_str, md5_str):
+    return get_str_md5(SECRET_KEY + input_str) == md5_str
