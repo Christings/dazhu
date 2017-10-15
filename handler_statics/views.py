@@ -18,14 +18,11 @@ def get_real_path(request, path):
     short_file_name = real_file_path.split("/")
     
     short_file_name = short_file_name[len(short_file_name)-1]
-    logging.debug(short_file_name)
-    if not short_file_name:
-        logging.error("get_real_path, short file name is empty")
-        return "", ""
+    logging.debug(u"short_file_name is {}".format(short_file_name))
 
     # 对 album 要鉴权
     if "static/album/" in real_file_path:
-        real_file_path = handler_album(request, short_file_name, real_file_path)
+        short_file_name, real_file_path = handler_album(request, short_file_name, real_file_path)
     
     return short_file_name, real_file_path
 

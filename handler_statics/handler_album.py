@@ -8,7 +8,13 @@ import logging
 # 相册要鉴权
 def handler_album(request, short_name, file_path):
     logging.debug("handler_album run")
-    pic = Photoes.objects.get(rndName = short_name)
+    error_file_path = u"{}/dazhu/static/{}".format(os.getcwd(), u'/images/dazhu.jpg')
+    try:
+        pic = Photoes.objects.get(rndName = short_name)
+    except Exception as err:
+        logging.error(u"handler_album {}".format(err))
+        return "dazhu.jpg", error_file_path
+
     token = ""
     is_checked = False
 
@@ -23,5 +29,5 @@ def handler_album(request, short_name, file_path):
     if pic.phototype == "private":
         if not request.user.is_authenticated():
             if is_checked == False:
-                file_path = u"{}/dazhu/static/{}".format(os.getcwd(), u'/images/dazhu.jpg')
-    return file_path
+                file_path = error_file_path
+    return short_name, file_path
