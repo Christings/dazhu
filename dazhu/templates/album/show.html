@@ -14,7 +14,7 @@
 							<a href="/album/rolate/{{pic.rndName}}">旋转</a>
 							<div id='url_text_warp'><textarea style="border:1px solid" id='url_text'></textarea></div>
 							<a id='get_pic_url' type="button" /> 
-								获取图片链接
+								分享图片(1天有效)
 							</a>
 						</div>
 						{% endif %}
@@ -83,7 +83,7 @@
 		$("#url_text_warp").hide();
 		$("#get_pic_url").click(function () {
 			hostName = window.location.host;
-			url = hostName + '/album/show/{{pic.rndName}}?token={{real_token}}';
+			url = "http://" + hostName + '/static/album/normal/{{pic.rndName}}?token={{real_token}}';
 
 			var u = navigator.userAgent;
 			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
@@ -104,7 +104,7 @@
 				transfer.focus();
 				transfer.select();
 				document.execCommand('Copy');
-				alert('已复制剪贴板');
+				alert('图片url已复制剪贴板');
 			}
 		});
 	});

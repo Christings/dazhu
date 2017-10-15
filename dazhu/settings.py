@@ -15,6 +15,8 @@ import logging.handlers
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+ERROR_PIC = "/images/error.jpg"
+
 fmt = '%(asctime)s %(levelname)s %(message)s'
 datefmt='%Y-%m-%d %H:%M:%S'
 logger = logging.getLogger()

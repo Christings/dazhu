@@ -3,12 +3,13 @@ from album.models import Photoes
 import os
 from album.get_md5_token import check_token
 import logging
+from dazhu.settings import ERROR_PIC
 
 
 # 相册要鉴权
 def handler_album(request, short_name, file_path):
     logging.debug("handler_album run")
-    error_file_path = u"{}/dazhu/static/{}".format(os.getcwd(), u'/images/dazhu.jpg')
+    error_file_path = u"{}/dazhu/static/{}".format(os.getcwd(), ERROR_PIC)
     try:
         pic = Photoes.objects.get(rndName = short_name)
     except Exception as err:
