@@ -5,13 +5,20 @@ import re
 from dazhu.settings import DOMAIN_STR
 from dazhu.settings import SECRET_KEY
 import hashlib
+import logging
 
 
 def get_str_md5(input_str):
-    md5obj = hashlib.md5()
-    md5obj.update(input_str)
-    return md5obj.hexdigest()
-
+    try:
+        logging.debug(u"get_str_md5 input_str {} {}".format(type(input_str), input_str))
+        md5obj = hashlib.md5()
+        md5obj.update(input_str.encode('utf-8'))
+        result = md5obj.hexdigest().decode('utf-8')
+        logging.debug("md5obj.hexdigest {} {}".format(type(result), result))
+        return result
+    except Exception as err:
+        logging.error(u"get_str_md5 {} {} {}".format(type(input_str), input_str, err))
+        return ""
 
 def decodeHtml(input):
     s = input

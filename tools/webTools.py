@@ -158,8 +158,7 @@ def readFile(filePath):
         with open(filePath, 'r') as f:
             return f.read()
     except Exception as error:
-        #print(error)
-        pass
+        logging.error("readFile error {}".format(error))
     return data
 
 def ExtractData(regex, content):

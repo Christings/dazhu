@@ -4,6 +4,8 @@ from django.db import models
 import dazhu.settings as settings
 import os
 import tools.webTools as tools
+import logging
+
 
 class Photoes(models.Model):
     rndName = models.CharField(max_length=150)
@@ -14,10 +16,10 @@ class Photoes(models.Model):
     timestamp = models.DateTimeField()
     def delete(self, using=None):
         # try:
-        normal_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/normal/", self.rndName]).encode("utf-8")
-        mini_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/mini/", self.rndName]).encode("utf-8")
+        normal_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/normal/", self.rndName])
+        mini_path = u"".join([settings.BASE_DIR,"/dazhu/static/album/mini/", self.rndName])
         
-        tools.debug("delete file ", normal_path)
+        logging.debug("delete file normal_path {} {}".format(normal_path, normal_path))
         if os.path.isfile(normal_path):
             os.remove(normal_path)
         if os.path.isfile(mini_path):

@@ -7,6 +7,7 @@ import logging
 
 # 相册要鉴权
 def handler_album(request, short_name, file_path):
+    logging.debug("handler_album run")
     pic = Photoes.objects.get(rndName = short_name)
     token = ""
     is_checked = False

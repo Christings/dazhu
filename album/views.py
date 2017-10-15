@@ -83,10 +83,11 @@ class show(TemplateView):
             if self.request.user.is_authenticated():
                 next = Photoes.objects.filter(timestamp__lt=pic.timestamp).order_by("-timestamp")[0]
                 real_token = get_token(inputName)
+                logging.debug("show real_token {}".format(real_token))
             else:
                 next = Photoes.objects.filter(phototype='public').filter(timestamp__lt=pic.timestamp).order_by("-timestamp")[0]
         except Exception as error:
-            tools.debug("next find fail",error)
+            logging.error("next find fail {}".format(error))
             pass
         context['next']=next
         context['token']=token
@@ -141,7 +142,7 @@ def ajaxGetFirst6Album(request):
 def upload(request):
     """ 上传文件 """
     source_filename = request.POST.get('name', '')
-    tools.debug(source_filename)
+    tools.debug("upload source_filename ".format(source_filename))
     # print("request aid is ",request.POST['aid'])
     fileObj = request.FILES.get('file')
     tools.debug(fileObj)
@@ -149,17 +150,17 @@ def upload(request):
     response = HttpResponse()
 
     if fileObj:
-        filename = fileObj.name.encode("utf8")
-        fileExt = ""
+        filename = fileObj.name
+        fileExt = u""
         fileInfo = []
         if "." in filename:
             fileInfo = filename.split('.')
             fileExt = fileInfo[len(fileInfo) - 1]
             fileExt = '.' + fileExt
-            tools.debug("fileext is " + fileExt)
+            logging.debug(u"fileext is {} {}".format(type(fileExt), fileExt))
 
         def name_add_rndnum(input_name):
-            tools.debug("name_add_rndnum", input_name)
+            logging.debug(u"name_add_rndnum {} {}".format(type(input_name), input_name))
             file_name = os.path.split(input_name)
             file_name_arr = os.path.splitext(file_name[1])
             quote_name_arr = [x for x in file_name_arr]
@@ -167,40 +168,49 @@ def upload(request):
             return quote_name_arr
 
         file_name = name_add_rndnum(filename)[0]
-        tools.debug("文件名",file_name)
+        logging.info(u"filename {} {}".format(type(filename), file_name))
 
         album_folder = dazhu.settings.BASE_DIR + "/dazhu/static/album/"
+        album_folder = album_folder.decode("utf-8")
         if not os.path.exists(album_folder):
             os.makedirs(album_folder)
+        logging.debug("album_folder {} {}".format(type(album_folder), album_folder))
 
-        mini_folder = album_folder + "mini/"
+        mini_folder = album_folder + u"mini/"
         if not os.path.exists(mini_folder):
             os.makedirs(mini_folder)
 
-        normal_folder = album_folder + "normal/"
+        normal_folder = album_folder + u"normal/"
         if not os.path.exists(normal_folder):
             os.makedirs(normal_folder)
 
-        fileData = tools.readFile(dazhu.settings.BASE_DIR + "/dazhu/static/ueditor/net/config.json")
+        config_path = dazhu.settings.BASE_DIR + "/dazhu/static/ueditor/net/config.json"
+        config_path = config_path.decode('utf-8')
+        logging.debug("config path {} {}".format(type(config_path), config_path))
+
+        fileData = tools.readFile(config_path)
         allowExt = None
         configJson = json.loads(fileData)
+
         try:
             allowExt = configJson["imageManagerAllowFiles"]
         except Exception as errors:
-            tools.debug("json load file types error")
-            tools.debug(errors)
+            logging.error(u"json load file types error {}".format(errors))
             return response
 
+        logging.debug("allowExt {} {}".format(type(allowExt), allowExt))
+
         if allowExt == None:
-            tools.debug("不能获取 file types")
+            logging.error(u"不能获取 file types")
             return response
 
 
         if fileExt.lower() in allowExt:
             # file_path = normal_folder + file_name + "tmp" + fileExt
+            logging.debug(u"file ext in allow ext, start upload")
             mini_path = mini_folder + file_name + fileExt
             normal_path = normal_folder + file_name + fileExt
-
+            logging.debug(u"normal_path {} {}".format(type(normal_path), normal_path))
             try:
                 with open(normal_path, 'wb+') as f:
                     for chunk in fileObj.chunks():
@@ -213,7 +223,7 @@ def upload(request):
                 im = Image.open(normal_path)
                 width = im.size[0]
                 height = im.size[1]
-                tools.debug("upload photo ", width, height)
+                logging.debug("upload photo w {} h {}".format(width, height))
                 if width > 2048 or height > 2048:
                     resizeImg(im, normal_path, 2048, 2048)
 

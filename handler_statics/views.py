@@ -11,21 +11,31 @@ from handler_statics.handler_album import handler_album
 
 def get_real_path(request, path):
     real_file_path = u"{}/dazhu/static/{}".format(os.getcwd(), path)
+    logging.debug(u"get_real_path real_file_path {}".format(real_file_path))
     if real_file_path.endswith("/"):
         real_file_path = real_file_path[:-1]
 
     short_file_name = real_file_path.split("/")
+    
     short_file_name = short_file_name[len(short_file_name)-1]
+    logging.debug(short_file_name)
+    if not short_file_name:
+        logging.error("get_real_path, short file name is empty")
+        return "", ""
 
     # 对 album 要鉴权
-    if "album/" in path:
+    if "static/album/" in real_file_path:
         real_file_path = handler_album(request, short_file_name, real_file_path)
+    
     return short_file_name, real_file_path
 
 
 def get_file_m_time(request, path):
     try:
         _, real_file_path = get_real_path(request, path)
+        if not real_file_path:
+            return datetime.datetime.now()
+
         mtime = time.ctime(os.path.getmtime(real_file_path))
         logging.info("last modified: {}".format(mtime))
         return datetime.datetime.strptime(mtime, "%a %b %d %H:%M:%S %Y")
@@ -35,8 +45,13 @@ def get_file_m_time(request, path):
 
 @last_modified(get_file_m_time)
 def handler_statics(request, path):
+    logging.info(u"handler_statics path {}".format(path))
     short_file_name, real_file_path = get_real_path(request, path)
-    
+    if not short_file_name:
+        logging.error("handler_statics, short_file_name is empty")
+        response = HttpResponse("")
+        return response
+
     response = StreamingHttpResponse(readFile(real_file_path))
     response['Content-Type'] = get_right_content_type(short_file_name)
     response['Content-Disposition'] = get_right_content_disposition(short_file_name)
@@ -78,5 +93,6 @@ def readFile(file_name, chunk_size=512):
                     yield c
                 else:
                     break
-    except:
+    except Exception as err:
+        logging.error("readFile {}".format(err))
         yield b""
